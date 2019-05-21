@@ -44,4 +44,15 @@ public class ContaService {
 		newObj.setNumero(obj.getNumero());
 		newObj.setSaldo(obj.getSaldo());
 	}
+	
+	public void processarSaldo(Integer contaId) {
+		
+		Conta conta = find(contaId);
+		
+		Double receitas = repo.somaReceitas(contaId);
+		Double despesas = repo.somaDespesas(contaId);
+		
+		conta.setSaldo(receitas - despesas);
+	}
+
 }

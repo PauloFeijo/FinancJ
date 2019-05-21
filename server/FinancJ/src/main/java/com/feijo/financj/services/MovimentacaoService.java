@@ -3,6 +3,8 @@ package com.feijo.financj.services;
 import java.util.Date;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,21 +36,30 @@ public class MovimentacaoService {
 		return repo.findAll();
 	}
 
+	@Transactional
 	public Movimentacao insert(MovimentacaoDTO objDto) {
 		Movimentacao obj = new Movimentacao();
 		updateData(obj, objDto);
-		return repo.save(obj);
+		obj = repo.save(obj);
+		contaServ.processarSaldo(obj.getConta().getId());
+		return obj;
 	}
 
+	@Transactional
 	public Movimentacao update(MovimentacaoDTO objDto) {
 		Movimentacao obj = find(objDto.getId());
 		updateData(obj, objDto);
-		return repo.save(obj);
+		obj = repo.save(obj);
+		contaServ.processarSaldo(obj.getConta().getId());
+		return obj;
 	}
 
+	@Transactional
 	public void delete(Integer id) {
-		find(id);
+		Movimentacao obj = find(id);
+		Integer contaId = obj.getConta().getId();
 		repo.deleteById(id);
+		contaServ.processarSaldo(contaId);
 	}
 
 	private void updateData(Movimentacao obj, MovimentacaoDTO objDto) {
@@ -66,4 +77,5 @@ public class MovimentacaoService {
 		obj.setCategoria(categoria);
 
 	}
+	
 }
