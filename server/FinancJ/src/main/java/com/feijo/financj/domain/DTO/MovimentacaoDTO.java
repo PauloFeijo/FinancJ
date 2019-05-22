@@ -7,6 +7,10 @@ import java.util.Date;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.beans.factory.annotation.Required;
+import org.springframework.lang.NonNull;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.feijo.financj.domain.Categoria;
 import com.feijo.financj.domain.Conta;
@@ -15,23 +19,31 @@ public class MovimentacaoDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private Integer id;
-	private Integer conta_id;
-	private Integer categoria_id;
+	@NonNull()
+	private Integer contaId;
+	private String contaDescricao;
+	@NonNull()
+	private Integer categoriaId;
+	private String categoriaDescricao;
+	@NonNull()
 	private String descricao;
+	@NonNull()
 	private Date data;
+	@NonNull()
 	private Double valor;
+	@NonNull()
 	private String tipo;
 	
 	public MovimentacaoDTO() {
 		super();
 	}
 	
-	public MovimentacaoDTO(Integer id, Integer conta_id, Integer categoria_id, String descricao, Date data,
+	public MovimentacaoDTO(Integer id, Integer contaId, Integer categoriaId, String descricao, Date data,
 			Double valor, String tipo) {
 		super();
 		this.id = id;
-		this.conta_id = conta_id;
-		this.categoria_id = categoria_id;
+		this.contaId = contaId;
+		this.categoriaId = categoriaId;
 		this.descricao = descricao;
 		this.data = data;
 		this.valor = valor;
@@ -46,20 +58,20 @@ public class MovimentacaoDTO implements Serializable {
 		this.id = id;
 	}
 
-	public Integer getConta_id() {
-		return conta_id;
+	public Integer getContaId() {
+		return contaId;
 	}
 
-	public void setConta_id(Integer conta_id) {
-		this.conta_id = conta_id;
+	public void setContaId(Integer contaId) {
+		this.contaId = contaId;
 	}
 
-	public Integer getCategoria_id() {
-		return categoria_id;
+	public Integer getCategoriaId() {
+		return categoriaId;
 	}
 
-	public void setCategoria_id(Integer categoria_id) {
-		this.categoria_id = categoria_id;
+	public void setCategoriaId(Integer categoriaId) {
+		this.categoriaId = categoriaId;
 	}
 
 	public String getDescricao() {
@@ -92,5 +104,21 @@ public class MovimentacaoDTO implements Serializable {
 
 	public void setTipo(String tipo) {
 		this.tipo = tipo;
+	}
+
+	public String getContaDescricao() {
+		return contaDescricao;
+	}
+
+	public void setContaDescricao(String contaDescricao) {
+		this.contaDescricao = contaDescricao;
+	}
+
+	public String getCategoriaDescricao() {
+		return categoriaDescricao;
+	}
+
+	public void setCategoriaDescricao(String categoriaDescricao) {
+		this.categoriaDescricao = categoriaDescricao;
 	}
 }

@@ -1,7 +1,6 @@
 package com.feijo.financj.domain;
 
 import java.io.Serializable;
-import java.util.Currency;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -10,6 +9,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import org.springframework.lang.NonNull;
+
+import com.feijo.financj.domain.DTO.MovimentacaoDTO;
 import com.feijo.financj.domain.enums.Tipo;
 
 @Entity
@@ -20,15 +22,21 @@ public class Movimentacao implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
+	@NonNull
 	@ManyToOne
 	private Conta conta;
 	
+	@NonNull
 	@ManyToOne
 	private Categoria categoria;
 	
+	@NonNull
 	private String descricao;
+	@NonNull
 	private Date data;
+	@NonNull
 	private Double valor;
+	@NonNull
 	private String tipo;
 	
 	public Movimentacao() {
@@ -102,7 +110,7 @@ public class Movimentacao implements Serializable {
 	public void setTipo(Tipo tipo) {
 		this.tipo = (tipo == null) ? null : tipo.getFlag();
 	}
-
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

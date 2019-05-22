@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.feijo.financj.domain.Conta;
 import com.feijo.financj.repositories.ContaRepository;
+import com.feijo.financj.services.exceptions.ObjectNotFoundException;
 
 @Service
 public class ContaService {
@@ -15,8 +16,14 @@ public class ContaService {
 	ContaRepository repo;
 
 	public Conta find(Integer id) {
-		Conta conta = repo.findById(id).orElse(null);
-		return conta;
+		
+		Conta obj = repo.findById(id).orElse(null);
+		
+		if (obj == null) {
+			throw new ObjectNotFoundException(
+					"Objeto não encontrado! Id: " + id + ", Tipo: " + Conta.class.getName());
+		}
+		return obj;
 	}
 
 	public List<Conta> findAll() {

@@ -27,15 +27,15 @@ public class MovimentacaoResource {
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> find(@PathVariable Integer id) {
 		
-		Movimentacao movimentacao = serv.find(id);
+		MovimentacaoDTO movimentacao = serv.find(id);
 		
 		return ResponseEntity.ok().body(movimentacao);
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public ResponseEntity<List<Movimentacao>> findAll() {
+	public ResponseEntity<List<MovimentacaoDTO>> findAll() {
 
-		List<Movimentacao>  lista = serv.findAll();
+		List<MovimentacaoDTO>  lista = serv.findAll();
 
 		return ResponseEntity.ok().body(lista);
 	}

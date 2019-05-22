@@ -31,6 +31,7 @@ public class Categoria implements Serializable {
 	@JoinColumn(name = "categoria_pai_id")
 	private Categoria categoriaPai;
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "categoriaPai", cascade = CascadeType.ALL)
 	private List<Categoria> categorias = new ArrayList<>();
 

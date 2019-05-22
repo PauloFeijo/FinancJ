@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.feijo.financj.domain.Categoria;
+import com.feijo.financj.domain.Conta;
 import com.feijo.financj.domain.DTO.CategoriaDTO;
 import com.feijo.financj.domain.enums.Tipo;
 import com.feijo.financj.repositories.CategoriaRepository;
+import com.feijo.financj.services.exceptions.ObjectNotFoundException;
 
 @Service
 public class CategoriaService {
@@ -17,8 +19,13 @@ public class CategoriaService {
 	CategoriaRepository repo;
 
 	public Categoria find(Integer id) {
-		Categoria categoria = repo.findById(id).orElse(null);
-		return categoria;
+		Categoria obj = repo.findById(id).orElse(null);
+		
+		if (obj == null) {
+			throw new ObjectNotFoundException(
+					"Objeto não encontrado! Id: " + id + ", Tipo: " + Categoria.class.getName());
+		}		
+		return obj;
 	}
 
 	public List<Categoria> findAll() {
