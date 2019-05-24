@@ -11,7 +11,7 @@ import javax.persistence.ManyToOne;
 
 import org.springframework.lang.NonNull;
 
-import com.feijo.financj.domain.DTO.MovimentacaoDTO;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.feijo.financj.domain.enums.Tipo;
 
 @Entity
@@ -32,10 +32,14 @@ public class Movimentacao implements Serializable {
 	
 	@NonNull
 	private String descricao;
+	
 	@NonNull
+	@JsonFormat(pattern="dd/MM/yyyy hh:mm:ss")
 	private Date data;
+	
 	@NonNull
 	private Double valor;
+	
 	@NonNull
 	private String tipo;
 	

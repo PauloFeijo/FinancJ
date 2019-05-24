@@ -11,6 +11,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.lang.NonNull;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.feijo.financj.domain.Categoria;
 import com.feijo.financj.domain.Conta;
@@ -19,18 +20,27 @@ public class MovimentacaoDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private Integer id;
+	
 	@NonNull()
 	private Integer contaId;
+	
 	private String contaDescricao;
+	
 	@NonNull()
 	private Integer categoriaId;
+	
 	private String categoriaDescricao;
+	
 	@NonNull()
 	private String descricao;
+	
 	@NonNull()
+	@JsonFormat(pattern="dd/MM/yyyy hh:mm:ss")
 	private Date data;
+	
 	@NonNull()
 	private Double valor;
+	
 	@NonNull()
 	private String tipo;
 	

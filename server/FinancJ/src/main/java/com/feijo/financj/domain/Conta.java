@@ -7,6 +7,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.lang.NonNull;
+
 @Entity
 public class Conta implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -14,8 +17,13 @@ public class Conta implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)	
 	private Integer id;
+	
+	@NonNull
 	private String descricao;
+	
 	private String numero;
+	
+	@NonNull
 	private Double saldo;
 	
 	public Conta(Integer id, String descricao, String numero, Double saldo) {
