@@ -3,7 +3,6 @@ package com.feijo.financj;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
-import org.hibernate.type.CurrencyType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -13,10 +12,14 @@ import com.feijo.financj.domain.CartaoCredito;
 import com.feijo.financj.domain.Categoria;
 import com.feijo.financj.domain.Conta;
 import com.feijo.financj.domain.Movimentacao;
+import com.feijo.financj.domain.PagarReceber;
+import com.feijo.financj.domain.Parcela;
 import com.feijo.financj.domain.enums.Tipo;
 import com.feijo.financj.repositories.CategoriaRepository;
 import com.feijo.financj.repositories.ContaRepository;
 import com.feijo.financj.repositories.MovimentacaoRepository;
+import com.feijo.financj.repositories.PagarReceberRepository;
+import com.feijo.financj.repositories.ParcelaRepository;
 
 @SpringBootApplication
 public class FinancJApplication implements CommandLineRunner{
@@ -29,6 +32,12 @@ public class FinancJApplication implements CommandLineRunner{
 	
 	@Autowired
 	private MovimentacaoRepository movRepo;
+	
+	@Autowired
+	private PagarReceberRepository pagRecRepo;
+	
+	@Autowired
+	private ParcelaRepository parcRepo;	
 
 	public static void main(String[] args) {
 		SpringApplication.run(FinancJApplication.class, args);
@@ -60,6 +69,16 @@ public class FinancJApplication implements CommandLineRunner{
 		Movimentacao mov = new Movimentacao(1, conta, cat3, "Compra no supermercado", dataHora.parse("01/01/2019 11:00:00"), 800.00, Tipo.DESPESA);
 		
 		movRepo.save(mov);
+		
+		PagarReceber pagRec = new PagarReceber(1, "IPVA", 1, 500.00, data.parse("30/06/2019"), 0.0, cat3, cartao); 
+		Parcela parc = new Parcela(pagRec, 1, pagRec.getVencimento(), 500.0, 0.0);
+		
+		pagRecRepo.save(pagRec);
+		
+		pagRec.getParcelas().addAll(Arrays.asList(parc));
+		
+		parcRepo.save(parc);
+		
 	}
 
 }
