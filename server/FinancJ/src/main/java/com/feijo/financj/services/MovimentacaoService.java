@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.feijo.financj.domain.Categoria;
 import com.feijo.financj.domain.Conta;
 import com.feijo.financj.domain.Movimentacao;
+import com.feijo.financj.domain.PagarReceber;
 import com.feijo.financj.domain.DTO.MovimentacaoDTO;
 import com.feijo.financj.domain.enums.Tipo;
 import com.feijo.financj.repositories.MovimentacaoRepository;
@@ -28,7 +29,7 @@ public class MovimentacaoService {
 	@Autowired
 	CategoriaService catServ;
 
-	public MovimentacaoDTO find(Integer id) {
+	public Movimentacao find(Integer id) {
 		
 		Movimentacao obj = repo.findById(id).orElse(null);
 				
@@ -37,7 +38,11 @@ public class MovimentacaoService {
 					"Objeto não encontrado! Id: " + id + ", Tipo: " + Movimentacao.class.getName());
 		}
 
-		return toDTO(obj);
+		return obj;
+	}
+	
+	public MovimentacaoDTO findDTO(Integer id) {
+		return toDTO(find(id));
 	}
 
 	public List<MovimentacaoDTO> findAll() {
@@ -46,26 +51,28 @@ public class MovimentacaoService {
 
 	@Transactional
 	public Movimentacao insert(MovimentacaoDTO objDto) {
-		Movimentacao obj = fromDTO(objDto);
-		obj = repo.save(obj);
-		contaServ.processarSaldo(obj.getConta().getId());
-		return obj;
+		objDto.setId(null);
+		return insertOrUpdate(objDto);
 	}
 
 	@Transactional
 	public Movimentacao update(MovimentacaoDTO objDto) {
-		Movimentacao obj = fromDTO(find(objDto.getId()));
-		obj = repo.save(obj);
-		contaServ.processarSaldo(obj.getConta().getId());
-		return obj;
+		return insertOrUpdate(objDto);
 	}
 
 	@Transactional
 	public void delete(Integer id) {
-		Movimentacao obj = fromDTO(find(id));
+		Movimentacao obj = find(id);
 		Integer contaId = obj.getConta().getId();
 		repo.deleteById(id);
 		contaServ.processarSaldo(contaId);
+	}
+	
+	private Movimentacao insertOrUpdate(MovimentacaoDTO objDto) {
+		Movimentacao obj = fromDTO(objDto);
+		obj = repo.save(obj);
+		contaServ.processarSaldo(obj.getConta().getId());
+		return obj;
 	}
 
 	private MovimentacaoDTO toDTO(Movimentacao obj) {
@@ -92,19 +99,22 @@ public class MovimentacaoService {
 	}
 
 	private Movimentacao fromDTO(MovimentacaoDTO objDto) {
-
 		if (objDto == null) {
 			return null;
 		}
 
-		Movimentacao obj = new Movimentacao();
-
 		Conta conta = contaServ.find(objDto.getContaId());
 		Categoria categoria = catServ.find(objDto.getCategoriaId());
-
+		
+		Movimentacao obj;
+		
 		if (objDto.getId() != null) {
+			obj = find(objDto.getId());
 			obj.setId(objDto.getId());
+		} else {
+			obj = new Movimentacao();
 		}
+
 		obj.setConta(conta);
 		obj.setCategoria(categoria);
 		obj.setDescricao(objDto.getDescricao());
