@@ -1,7 +1,9 @@
 package com.feijo.financj.services;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -73,23 +75,72 @@ public class PagarReceberService {
 		repo.deleteById(id);
 	}
 	
-	private void upatePagarReceberParcela(PagarReceber obj) {
-		for (Parcela parc: obj.getParcelas()) {
-			parc.setPagarReceber(obj);
-		}
-	}
-	
 	private PagarReceber insertOrUpdate(PagarReceberDTO objDto) {
 		
 		PagarReceber obj = fromDTO(objDto);
 		
+		updateParcelas(objDto, obj);
+		
 		obj = repo.save(obj);
 		
-		upatePagarReceberParcela(obj);
-		
-		parcRepo.saveAll(obj.getParcelas());
-		
 		return obj;
+	}
+	
+	private void updateParcelas(PagarReceberDTO objDto, PagarReceber obj) {
+		
+		boolean encontrou = false;
+		
+		for (Parcela parcDto : objDto.getParcelas()) {
+			encontrou = false;
+			
+			for (Parcela parc : obj.getParcelas()) {
+			    // Atualiza parcelas alteradas
+				if (parc.getNumParcela() == parcDto.getNumParcela()) {
+					updateParcela(parc, parcDto);
+					parc.setPagarReceber(obj);
+					encontrou = true;
+					break;
+				}
+			}
+			
+			// Cria as parcelas novas
+			if (!encontrou) {
+				Parcela parc = new Parcela();
+				updateParcela(parc, parcDto);
+				parc.setPagarReceber(obj);
+				obj.getParcelas().add(parc);
+			}
+		}
+		
+		Set<Parcela> parcelasRemover = new HashSet<>();
+		
+		for (Parcela parc : obj.getParcelas()) {
+			encontrou = false;
+			
+			for (Parcela parcDto : objDto.getParcelas()) {
+				if (parcDto.getNumParcela() == parc.getNumParcela()) {
+					encontrou = true;
+					break;
+				}				
+			}
+			
+			if (!encontrou) {
+				parcelasRemover.add(parc);
+			}			
+		}
+		
+		// Remove as parcelas removidas
+		if (parcelasRemover.size() > 0) {
+			obj.getParcelas().removeAll(parcelasRemover);
+			parcRepo.deleteAll(parcelasRemover);
+		}
+	}
+	
+	private void updateParcela(Parcela obj, Parcela src) {
+		obj.setNumParcela(src.getNumParcela());
+		obj.setValor(src.getValor());
+		obj.setValorPago(src.getValorPago());
+		obj.setVencimento(src.getVencimento());
 	}
 
 	private PagarReceberDTO toDTO(PagarReceber obj) {
@@ -143,7 +194,6 @@ public class PagarReceberService {
 		obj.setValorPago(objDto.getValorPago());
 		obj.setConta(conta);
 		obj.setCategoria(categoria);
-		obj.setParcelas(objDto.getParcelas());		
 
 		return obj;
 	}
