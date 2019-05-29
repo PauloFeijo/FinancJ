@@ -50,7 +50,7 @@ public class FinancJApplication implements CommandLineRunner{
 		SimpleDateFormat data = new SimpleDateFormat("dd/MM/yyyy");
 		
 		Conta conta = new Conta(1, "Conta Corrente", "1234", 0.0);
-		CartaoCredito cartao = new CartaoCredito(2, "Cartão Nubank", "45654568465464", 0.0, data.parse("01/01/2019"), 0.0, 6000.0);
+		CartaoCredito cartao = new CartaoCredito(2, "Cartão Nubank", "45654568465464", 0.0, data.parse("01/01/2019"), 0.0, 6000.0, 0.0);
 		contaRepo.saveAll(Arrays.asList(conta, cartao));
 		
 		Categoria cat1 = new Categoria(1,"Despesas", Tipo.DESPESA);
@@ -70,7 +70,7 @@ public class FinancJApplication implements CommandLineRunner{
 		
 		movRepo.save(mov);
 		
-		PagarReceber pagRec = new PagarReceber(1, "IPVA", 1, 500.00, data.parse("30/06/2019"), 0.0, cat3, cartao); 
+		PagarReceber pagRec = new PagarReceber(1, "IPVA", 1, data.parse("30/06/2019"), cat3, cartao); 
 		Parcela parc = new Parcela(pagRec, 1, pagRec.getVencimento(), 500.0, 0.0);
 		
 		pagRecRepo.save(pagRec);

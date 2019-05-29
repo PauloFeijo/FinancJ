@@ -10,6 +10,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.feijo.financj.domain.CartaoCredito;
 import com.feijo.financj.domain.Categoria;
 import com.feijo.financj.domain.Conta;
 import com.feijo.financj.domain.PagarReceber;
@@ -21,6 +22,8 @@ import com.feijo.financj.services.exceptions.ObjectNotFoundException;
 
 @Service
 public class PagarReceberService {
+	
+	private Set<CartaoCredito> cartoesProcessarFatura = new HashSet<>();
 
 	@Autowired
 	PagarReceberRepository repo;
@@ -30,6 +33,9 @@ public class PagarReceberService {
 
 	@Autowired
 	ContaService contaServ;
+	
+	@Autowired
+	CartaoCreditoService cartaoServ;
 
 	@Autowired
 	CategoriaService catServ;
@@ -70,7 +76,7 @@ public class PagarReceberService {
 		
 		PagarReceber obj = find(id);
 		
-		Integer contaId = obj.getConta().getId();
+		addCartaoCreditoProcessarFatura(obj.getConta());
 		
 		repo.deleteById(id);
 	}
@@ -83,7 +89,15 @@ public class PagarReceberService {
 		
 		obj = repo.save(obj);
 		
+		processarFaturaFuturaCartaoCredito();
+		
 		return obj;
+	}
+	
+	private void addCartaoCreditoProcessarFatura(Conta conta) {
+		if (conta.getClass() == CartaoCredito.class ) {
+			cartoesProcessarFatura.add((CartaoCredito) conta);
+		}
 	}
 	
 	private void updateParcelas(PagarReceberDTO objDto, PagarReceber obj) {
@@ -142,6 +156,13 @@ public class PagarReceberService {
 		obj.setValorPago(src.getValorPago());
 		obj.setVencimento(src.getVencimento());
 	}
+	
+	private void processarFaturaFuturaCartaoCredito() {
+		for (CartaoCredito cartao: cartoesProcessarFatura) {
+			cartaoServ.processarFaturaFutura(cartao.getId());
+		}
+		cartoesProcessarFatura.clear();
+	}
 
 	private PagarReceberDTO toDTO(PagarReceber obj) {
 
@@ -180,18 +201,19 @@ public class PagarReceberService {
 		Conta conta = contaServ.find(objDto.getContaId());
 		Categoria categoria = catServ.find(objDto.getCategoriaId());
 		
+		addCartaoCreditoProcessarFatura(conta);
+		
 		if (objDto.getId() != null) {
 			obj = find(objDto.getId());
 			obj.setId(objDto.getId());
+			addCartaoCreditoProcessarFatura(obj.getConta());
 		} else {
 			obj = new PagarReceber();
 		}
 		
 		obj.setDescricao(objDto.getDescricao());
 		obj.setNumParcelas(objDto.getNumParcelas());
-		obj.setValorTotal(objDto.getValorTotal());
 		obj.setVencimento(objDto.getVencimento());
-		obj.setValorPago(objDto.getValorPago());
 		obj.setConta(conta);
 		obj.setCategoria(categoria);
 

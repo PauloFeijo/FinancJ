@@ -24,6 +24,9 @@ public class CartaoCredito extends Conta implements Serializable {
 	@NonNull
 	private Double valorLimite;
 	
+	@NonNull
+	private Double faturaFutura;
+	
 	public CartaoCredito() {
 		super();
 	}
@@ -33,11 +36,12 @@ public class CartaoCredito extends Conta implements Serializable {
 	}
 
 	public CartaoCredito(Integer id, String descricao, String numero, Double saldo, Date dataFatura,
-			Double faturaFechada, Double valorLimite) {
+			Double faturaFechada, Double valorLimite, Double faturaFutura) {
 		super(id, descricao, numero, saldo);
 		this.dataFatura = dataFatura;
 		this.faturaFechada = faturaFechada;
 		this.valorLimite = valorLimite;
+		this.faturaFutura = faturaFutura;
 	}
 
 	public Date getDataFatura() {
@@ -64,12 +68,20 @@ public class CartaoCredito extends Conta implements Serializable {
 		this.valorLimite = valorLimite;
 	}
 	
+	public Double getFaturaFutura() {
+		return faturaFutura;
+	}
+
+	public void setFaturaFutura(Double faturaFutura) {
+		this.faturaFutura = faturaFutura;
+	}
+
 	public double getFaturaAtual() {
-		return (this.getSaldo() * -1) - this.faturaFechada;
+		return ((getSaldo() != 0) ? (getSaldo() * -1) : 0) - this.faturaFechada;
 	}
 	
 	public double getLimiteDisponivel() {
-		return this.valorLimite - this.getFaturaAtual() - this.faturaFechada;
+		return this.valorLimite - this.getFaturaAtual() - this.faturaFechada - this.faturaFutura;
 	}
 		
 }

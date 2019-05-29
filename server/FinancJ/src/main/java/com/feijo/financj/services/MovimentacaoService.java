@@ -1,7 +1,9 @@
 package com.feijo.financj.services;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -11,7 +13,6 @@ import org.springframework.stereotype.Service;
 import com.feijo.financj.domain.Categoria;
 import com.feijo.financj.domain.Conta;
 import com.feijo.financj.domain.Movimentacao;
-import com.feijo.financj.domain.PagarReceber;
 import com.feijo.financj.domain.DTO.MovimentacaoDTO;
 import com.feijo.financj.domain.enums.Tipo;
 import com.feijo.financj.repositories.MovimentacaoRepository;
@@ -19,6 +20,8 @@ import com.feijo.financj.services.exceptions.ObjectNotFoundException;
 
 @Service
 public class MovimentacaoService {
+	
+	private Set<Conta> contasProcessarSaldo = new HashSet<>();
 
 	@Autowired
 	MovimentacaoRepository repo;
@@ -63,18 +66,25 @@ public class MovimentacaoService {
 	@Transactional
 	public void delete(Integer id) {
 		Movimentacao obj = find(id);
-		Integer contaId = obj.getConta().getId();
+		contasProcessarSaldo.add(obj.getConta());
 		repo.deleteById(id);
-		contaServ.processarSaldo(contaId);
+		processarSaldoContas();
 	}
 	
 	private Movimentacao insertOrUpdate(MovimentacaoDTO objDto) {
 		Movimentacao obj = fromDTO(objDto);
 		obj = repo.save(obj);
-		contaServ.processarSaldo(obj.getConta().getId());
+		processarSaldoContas();
 		return obj;
 	}
 
+	private void processarSaldoContas() {
+		for (Conta conta : contasProcessarSaldo) {
+			contaServ.processarSaldo(conta.getId());
+		}
+		contasProcessarSaldo.clear();
+	}
+	
 	private MovimentacaoDTO toDTO(Movimentacao obj) {
 
 		if (obj == null) {
@@ -106,11 +116,14 @@ public class MovimentacaoService {
 		Conta conta = contaServ.find(objDto.getContaId());
 		Categoria categoria = catServ.find(objDto.getCategoriaId());
 		
+		contasProcessarSaldo.add(conta);
+		
 		Movimentacao obj;
 		
 		if (objDto.getId() != null) {
 			obj = find(objDto.getId());
 			obj.setId(objDto.getId());
+			contasProcessarSaldo.add(obj.getConta());
 		} else {
 			obj = new Movimentacao();
 		}

@@ -1,7 +1,6 @@
 package com.feijo.financj.resources;
 
 import java.net.URI;
-import java.util.List;
 
 import javax.validation.Valid;
 
@@ -15,15 +14,14 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.feijo.financj.domain.CartaoCredito;
-import com.feijo.financj.domain.Conta;
-import com.feijo.financj.services.ContaService;
+import com.feijo.financj.services.CartaoCreditoService;
 
 @RestController
 @RequestMapping(value = "/cartaoCredito")
 public class CartaoCreditoResource {
 
 	@Autowired
-	private ContaService serv;	
+	private CartaoCreditoService serv;	
 	
 	@RequestMapping(method=RequestMethod.POST)
 	public ResponseEntity<Void> insert(@Valid @RequestBody CartaoCredito obj) {

@@ -33,14 +33,8 @@ public class PagarReceber implements Serializable {
 	private Integer numParcelas;
 	
 	@NonNull
-	private Double valorTotal;
-	
-	@NonNull
 	@JsonFormat(pattern="dd/MM/yyyy")
 	private Date vencimento;
-	
-	@NonNull
-	private Double valorPago;
 	
 	@NonNull
 	@ManyToOne
@@ -57,15 +51,13 @@ public class PagarReceber implements Serializable {
 		super();
 	}
 
-	public PagarReceber(Integer id, String descricao, Integer numParcelas, Double valorTotal, Date vencimento,
-			Double valorPago, Categoria categoria, Conta conta) {
+	public PagarReceber(Integer id, String descricao, Integer numParcelas, Date vencimento,
+			Categoria categoria, Conta conta) {
 		super();
 		this.id = id;
 		this.descricao = descricao;
 		this.numParcelas = numParcelas;
-		this.valorTotal = valorTotal;
 		this.vencimento = vencimento;
-		this.valorPago = valorPago;
 		this.categoria = categoria;
 		this.conta = conta;
 	}
@@ -95,11 +87,11 @@ public class PagarReceber implements Serializable {
 	}
 
 	public Double getValorTotal() {
-		return valorTotal;
-	}
-
-	public void setValorTotal(Double valorTotal) {
-		this.valorTotal = valorTotal;
+		Double soma = 0.0;
+		for (Parcela parc : getParcelas()) {
+			soma += parc.getValor();
+		}
+		return soma;
 	}
 
 	public Date getVencimento() {
@@ -111,11 +103,11 @@ public class PagarReceber implements Serializable {
 	}
 
 	public Double getValorPago() {
-		return valorPago;
-	}
-
-	public void setValorPago(Double valorPago) {
-		this.valorPago = valorPago;
+		Double soma = 0.0;
+		for (Parcela parc : getParcelas()) {
+			soma += parc.getValorPago();
+		}
+		return soma;
 	}
 
 	public Categoria getCategoria() {
