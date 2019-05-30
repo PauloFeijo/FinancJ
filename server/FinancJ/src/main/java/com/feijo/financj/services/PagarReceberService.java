@@ -24,6 +24,9 @@ import com.feijo.financj.services.exceptions.ObjectNotFoundException;
 public class PagarReceberService {
 	
 	private Set<CartaoCredito> cartoesProcessarFatura = new HashSet<>();
+	
+	private Set<Parcela> parcelasInsertUpdateMovimentacacao = new HashSet<>();
+	private Set<Parcela> parcelasDeleteMovimentacacao = new HashSet<>();
 
 	@Autowired
 	PagarReceberRepository repo;
@@ -39,6 +42,9 @@ public class PagarReceberService {
 
 	@Autowired
 	CategoriaService catServ;
+	
+	@Autowired
+	MovimentacaoService movServ;
 	
 	public PagarReceber find(Integer id) {
 		
@@ -79,6 +85,10 @@ public class PagarReceberService {
 		addCartaoCreditoProcessarFatura(obj.getConta());
 		
 		repo.deleteById(id);
+		
+		processarFaturaFuturaCartaoCredito();
+		
+		processarMovimentacoes();		
 	}
 	
 	private PagarReceber insertOrUpdate(PagarReceberDTO objDto) {
@@ -90,6 +100,8 @@ public class PagarReceberService {
 		obj = repo.save(obj);
 		
 		processarFaturaFuturaCartaoCredito();
+		
+		processarMovimentacoes();
 		
 		return obj;
 	}
@@ -106,12 +118,14 @@ public class PagarReceberService {
 		
 		for (Parcela parcDto : objDto.getParcelas()) {
 			encontrou = false;
+			parcDto.setPagarReceber(obj);
 			
 			for (Parcela parc : obj.getParcelas()) {
 			    // Atualiza parcelas alteradas
 				if (parc.getNumParcela() == parcDto.getNumParcela()) {
-					updateParcela(parc, parcDto);
 					parc.setPagarReceber(obj);
+					addParcelaMovimentacao(parc, parcDto);
+					updateParcela(parc, parcDto);
 					encontrou = true;
 					break;
 				}
@@ -121,7 +135,7 @@ public class PagarReceberService {
 			if (!encontrou) {
 				Parcela parc = new Parcela();
 				updateParcela(parc, parcDto);
-				parc.setPagarReceber(obj);
+				addParcelaMovimentacao(null, parc);
 				obj.getParcelas().add(parc);
 			}
 		}
@@ -140,6 +154,7 @@ public class PagarReceberService {
 			
 			if (!encontrou) {
 				parcelasRemover.add(parc);
+				addParcelaMovimentacao(parc, null);
 			}			
 		}
 		
@@ -151,10 +166,25 @@ public class PagarReceberService {
 	}
 	
 	private void updateParcela(Parcela obj, Parcela src) {
+		obj.setPagarReceber(src.getPagarReceber());
 		obj.setNumParcela(src.getNumParcela());
 		obj.setValor(src.getValor());
 		obj.setValorPago(src.getValorPago());
 		obj.setVencimento(src.getVencimento());
+		
+	}
+	
+	private void addParcelaMovimentacao(Parcela objOld, Parcela objNew) {
+		if (isPago(objOld) && !isPago(objNew)) {
+			parcelasDeleteMovimentacacao.add(objOld);
+		} else if (isPago(objNew) && (!isPago(objOld) || objNew.getValorPago() != objOld.getValorPago())) {
+			parcelasInsertUpdateMovimentacacao.add(objNew);
+		}
+	}
+	
+	private boolean isPago(Parcela obj) {
+		if (obj == null) return false;
+		return obj.getValorPago() > 0.00;
 	}
 	
 	private void processarFaturaFuturaCartaoCredito() {
@@ -162,6 +192,17 @@ public class PagarReceberService {
 			cartaoServ.processarFaturaFutura(cartao.getId());
 		}
 		cartoesProcessarFatura.clear();
+	}
+	
+	private void processarMovimentacoes() {
+		for (Parcela parc: parcelasInsertUpdateMovimentacacao) {
+			movServ.insertUpdateMovimentacaoByParcela(parc);
+		}
+		for (Parcela parc: parcelasDeleteMovimentacacao) {
+			movServ.deleteMovimentacaoByParcela(parc);
+		}
+		parcelasInsertUpdateMovimentacacao.clear();
+		parcelasDeleteMovimentacacao.clear();
 	}
 
 	private PagarReceberDTO toDTO(PagarReceber obj) {

@@ -1,6 +1,7 @@
 package com.feijo.financj.services;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.feijo.financj.domain.Categoria;
 import com.feijo.financj.domain.Conta;
 import com.feijo.financj.domain.Movimentacao;
+import com.feijo.financj.domain.Parcela;
 import com.feijo.financj.domain.DTO.MovimentacaoDTO;
 import com.feijo.financj.domain.enums.Tipo;
 import com.feijo.financj.repositories.MovimentacaoRepository;
@@ -69,6 +71,59 @@ public class MovimentacaoService {
 		contasProcessarSaldo.add(obj.getConta());
 		repo.deleteById(id);
 		processarSaldoContas();
+	}
+	
+	@Transactional
+	public Movimentacao insertUpdateMovimentacaoByParcela(Parcela parc) {
+		
+		Movimentacao mov = repo.findByParcela(parc);
+		
+		if (mov == null) {
+			mov = new Movimentacao();
+			mov.setData(new Date());
+		} else {
+			if (mov.getConta() != parc.getPagarReceber().getConta()) {
+				contasProcessarSaldo.add(mov.getConta());
+			}
+		}
+		
+		mov.setCategoria(parc.getPagarReceber().getCategoria());
+		mov.setConta(parc.getPagarReceber().getConta());
+		mov.setDescricao(montarDescricaoMovimentacaoParcela(parc));
+		mov.setTipo(parc.getPagarReceber().getCategoria().getTipo());
+		mov.setValor(parc.getValorPago());
+		mov.setParcela(parc);
+		
+		contasProcessarSaldo.add(mov.getConta());
+		
+		mov = repo.save(mov);
+		
+		processarSaldoContas();
+		
+		return mov;
+	}
+	
+	@Transactional
+	public void deleteMovimentacaoByParcela(Parcela parc) {
+		Movimentacao mov = repo.findByParcela(parc);
+		
+		if (mov == null) return;
+		
+		repo.delete(mov);
+		
+		contasProcessarSaldo.add(parc.getPagarReceber().getConta());
+		
+		processarSaldoContas();
+	}
+	
+	private String montarDescricaoMovimentacaoParcela(Parcela parc) {
+		String descri = "";
+		
+		if (parc.getPagarReceber().getNumParcelas() > 1) {
+			descri = parc.getNumParcela() + "/" + parc.getPagarReceber().getNumParcelas() + " ";
+		}
+		
+		return descri + parc.getPagarReceber().getDescricao();  
 	}
 	
 	private Movimentacao insertOrUpdate(MovimentacaoDTO objDto) {

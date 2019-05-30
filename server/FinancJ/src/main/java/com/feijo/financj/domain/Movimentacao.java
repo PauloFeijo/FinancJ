@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 import org.springframework.lang.NonNull;
 
@@ -42,6 +43,9 @@ public class Movimentacao implements Serializable {
 	
 	@NonNull
 	private String tipo;
+	
+	@OneToOne
+	private Parcela parcela;
 	
 	public Movimentacao() {
 		super();
@@ -115,6 +119,14 @@ public class Movimentacao implements Serializable {
 		this.tipo = (tipo == null) ? null : tipo.getFlag();
 	}
 	
+	public Parcela getParcela() {
+		return parcela;
+	}
+
+	public void setParcela(Parcela parcela) {
+		this.parcela = parcela;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

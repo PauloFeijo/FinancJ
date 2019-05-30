@@ -76,6 +76,7 @@ public class Parcela implements Serializable {
 	}
 
 	public Double getValorPago() {
+		if (valorPago == null) return 0.0;
 		return valorPago;
 	}
 
