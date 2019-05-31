@@ -26,7 +26,6 @@ public class MovimentacaoDTO implements Serializable {
 	
 	private String contaDescricao;
 	
-	@NonNull()
 	private Integer categoriaId;
 	
 	private String categoriaDescricao;

@@ -61,14 +61,13 @@ public class PagarReceberDTO implements Serializable {
 	}	
 
 	public PagarReceberDTO(Integer id, String descricao, Integer numParcelas, Double valorTotal, Date vencimento,
-			Double valorPago, Integer categoriaId, Integer contaId, Set<Parcela> parcelas) {
+			Integer categoriaId, Integer contaId, Set<Parcela> parcelas) {
 		super();
 		this.id = id;
 		this.descricao = descricao;
 		this.numParcelas = numParcelas;
 		this.valorTotal = valorTotal;
 		this.vencimento = vencimento;
-		this.valorPago = valorPago;
 		this.categoriaId = categoriaId;
 		this.contaId = contaId;
 		this.parcelas = parcelas;

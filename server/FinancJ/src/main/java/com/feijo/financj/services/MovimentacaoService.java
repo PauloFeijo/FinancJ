@@ -1,6 +1,7 @@
 package com.feijo.financj.services;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -15,6 +16,7 @@ import com.feijo.financj.domain.Categoria;
 import com.feijo.financj.domain.Conta;
 import com.feijo.financj.domain.Movimentacao;
 import com.feijo.financj.domain.Parcela;
+import com.feijo.financj.domain.Transferencia;
 import com.feijo.financj.domain.DTO.MovimentacaoDTO;
 import com.feijo.financj.domain.enums.Tipo;
 import com.feijo.financj.repositories.MovimentacaoRepository;
@@ -74,7 +76,7 @@ public class MovimentacaoService {
 	}
 	
 	@Transactional
-	public Movimentacao insertUpdateMovimentacaoByParcela(Parcela parc) {
+	public Movimentacao insertUpdateByParcela(Parcela parc) {
 		
 		Movimentacao mov = repo.findByParcela(parc);
 		
@@ -104,7 +106,7 @@ public class MovimentacaoService {
 	}
 	
 	@Transactional
-	public void deleteMovimentacaoByParcela(Parcela parc) {
+	public void deleteByParcela(Parcela parc) {
 		Movimentacao mov = repo.findByParcela(parc);
 		
 		if (mov == null) return;
@@ -113,6 +115,51 @@ public class MovimentacaoService {
 		
 		contasProcessarSaldo.add(parc.getPagarReceber().getConta());
 		
+		processarSaldoContas();
+	}
+	
+	@Transactional
+	public void insertUpdateByTransferencia(Transferencia transf) {
+		Movimentacao entrada;
+		Movimentacao saida;
+		
+		if (transf.getId() != null) {
+			entrada = find(transf.getEntrada().getId());
+			saida = find(transf.getSaida().getId());
+		} else {
+			entrada = new Movimentacao();
+			saida = new Movimentacao();
+		}
+		
+		saida.setConta(transf.getOrigem());
+		saida.setData(transf.getData());
+		saida.setDescricao("Transferência para a conta "+transf.getDestino().getDescricao());
+		saida.setTipo(Tipo.DESPESA);
+		saida.setValor(transf.getValor());
+		
+		entrada.setConta(transf.getDestino());
+		entrada.setData(transf.getData());
+		entrada.setDescricao("Transferência da conta "+transf.getOrigem().getDescricao());
+		entrada.setTipo(Tipo.RECEITA);
+		entrada.setValor(transf.getValor());
+		
+		repo.saveAll(Arrays.asList(saida, entrada));
+		
+		transf.setEntrada(entrada);
+		transf.setSaida(saida);
+		
+		contasProcessarSaldo.addAll(Arrays.asList(transf.getOrigem(), transf.getDestino()));
+		processarSaldoContas();
+	}
+	
+	@Transactional
+	public void deleteByTransferencia(Transferencia transf) {
+		Movimentacao entrada = find(transf.getEntrada().getId());
+		Movimentacao saida = find(transf.getSaida().getId());
+		
+		repo.deleteAll(Arrays.asList(entrada, saida));
+		
+		contasProcessarSaldo.addAll(Arrays.asList(transf.getOrigem(), transf.getDestino()));
 		processarSaldoContas();
 	}
 	
@@ -126,6 +173,7 @@ public class MovimentacaoService {
 		return descri + parc.getPagarReceber().getDescricao();  
 	}
 	
+	@Transactional
 	private Movimentacao insertOrUpdate(MovimentacaoDTO objDto) {
 		Movimentacao obj = fromDTO(objDto);
 		obj = repo.save(obj);
@@ -133,6 +181,7 @@ public class MovimentacaoService {
 		return obj;
 	}
 
+	@Transactional
 	private void processarSaldoContas() {
 		for (Conta conta : contasProcessarSaldo) {
 			contaServ.processarSaldo(conta.getId());
@@ -151,10 +200,14 @@ public class MovimentacaoService {
 		if (obj.getId() != null) {
 			objDto.setId(obj.getId());
 		}
+		
+		if (obj.getCategoria() != null) {
+			objDto.setCategoriaId(obj.getCategoria().getId());
+			objDto.setCategoriaDescricao(obj.getCategoria().getDescricao());
+		}
+		
 		objDto.setContaId(obj.getConta().getId());
-		objDto.setContaDescricao(obj.getConta().getDescricao());
-		objDto.setCategoriaId(obj.getCategoria().getId());
-		objDto.setCategoriaDescricao(obj.getCategoria().getDescricao());
+		objDto.setContaDescricao(obj.getConta().getDescricao());		
 		objDto.setDescricao(obj.getDescricao());
 		objDto.setData(obj.getData());
 		objDto.setValor(obj.getValor());
@@ -169,8 +222,6 @@ public class MovimentacaoService {
 		}
 
 		Conta conta = contaServ.find(objDto.getContaId());
-		Categoria categoria = catServ.find(objDto.getCategoriaId());
-		
 		contasProcessarSaldo.add(conta);
 		
 		Movimentacao obj;
@@ -182,9 +233,13 @@ public class MovimentacaoService {
 		} else {
 			obj = new Movimentacao();
 		}
+		
+		if (objDto.getCategoriaId() != null) {
+			Categoria categoria = catServ.find(objDto.getCategoriaId());
+			obj.setCategoria(categoria);
+		}
 
 		obj.setConta(conta);
-		obj.setCategoria(categoria);
 		obj.setDescricao(objDto.getDescricao());
 		obj.setData(objDto.getData());
 		obj.setValor(objDto.getValor());

@@ -196,10 +196,10 @@ public class PagarReceberService {
 	
 	private void processarMovimentacoes() {
 		for (Parcela parc: parcelasInsertUpdateMovimentacacao) {
-			movServ.insertUpdateMovimentacaoByParcela(parc);
+			movServ.insertUpdateByParcela(parc);
 		}
 		for (Parcela parc: parcelasDeleteMovimentacacao) {
-			movServ.deleteMovimentacaoByParcela(parc);
+			movServ.deleteByParcela(parc);
 		}
 		parcelasInsertUpdateMovimentacacao.clear();
 		parcelasDeleteMovimentacacao.clear();

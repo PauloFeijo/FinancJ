@@ -20,10 +20,11 @@ public class CategoriaDTO implements Serializable {
 		super();
 	}
 	
-	public CategoriaDTO(Integer id, String descricao, Integer categoriaPaiId) {
+	public CategoriaDTO(Integer id, String descricao, String tipo, Integer categoriaPaiId) {
 		super();
 		this.id = id;
 		this.descricao = descricao;
+		this.tipo = tipo;
 		this.categoriaPaiId = categoriaPaiId;
 	}
 

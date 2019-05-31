@@ -10,56 +10,44 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
-import org.springframework.lang.NonNull;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.feijo.financj.domain.enums.Tipo;
 
 @Entity
-public class Movimentacao implements Serializable {
+public class Transferencia implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)	
 	private Integer id;
 	
-	@NonNull
 	@ManyToOne
-	private Conta conta;
+	private Conta origem;
 	
 	@ManyToOne
-	private Categoria categoria;
+	private Conta destino;
 	
-	@NonNull
-	private String descricao;
+	@OneToOne
+	private Movimentacao entrada;
 	
-	@NonNull
+	@OneToOne
+	private Movimentacao saida;
+	
 	@JsonFormat(pattern="dd/MM/yyyy hh:mm:ss")
 	private Date data;
 	
-	@NonNull
 	private Double valor;
-	
-	@NonNull
-	private String tipo;
-	
-	@OneToOne
-	private Parcela parcela;
-	
-	public Movimentacao() {
+
+	public Transferencia() {
 		super();
 	}
 	
-	public Movimentacao(Integer id, Conta conta, Categoria categoria, String descricao, Date data, Double valor,
-			Tipo tipo) {
+	public Transferencia(Integer id, Conta origem, Conta destino, Date data, Double valor) {
 		super();
 		this.id = id;
-		this.conta = conta;
-		this.categoria = categoria;
-		this.descricao = descricao;
+		this.origem = origem;
+		this.destino = destino;
 		this.data = data;
 		this.valor = valor;
-		setTipo(tipo);
 	}
 
 	public Integer getId() {
@@ -70,28 +58,36 @@ public class Movimentacao implements Serializable {
 		this.id = id;
 	}
 
-	public Conta getConta() {
-		return conta;
+	public Conta getOrigem() {
+		return origem;
 	}
 
-	public void setConta(Conta conta) {
-		this.conta = conta;
+	public void setOrigem(Conta origem) {
+		this.origem = origem;
 	}
 
-	public Categoria getCategoria() {
-		return categoria;
+	public Conta getDestino() {
+		return destino;
 	}
 
-	public void setCategoria(Categoria categoria) {
-		this.categoria = categoria;
+	public void setDestino(Conta destino) {
+		this.destino = destino;
 	}
 
-	public String getDescricao() {
-		return descricao;
+	public Movimentacao getEntrada() {
+		return entrada;
 	}
 
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
+	public void setEntrada(Movimentacao entrada) {
+		this.entrada = entrada;
+	}
+
+	public Movimentacao getSaida() {
+		return saida;
+	}
+
+	public void setSaida(Movimentacao saida) {
+		this.saida = saida;
 	}
 
 	public Date getData() {
@@ -110,22 +106,6 @@ public class Movimentacao implements Serializable {
 		this.valor = valor;
 	}
 
-	public Tipo getTipo() {
-		return Tipo.toEnum(tipo);
-	}
-
-	public void setTipo(Tipo tipo) {
-		this.tipo = (tipo == null) ? null : tipo.getFlag();
-	}
-	
-	public Parcela getParcela() {
-		return parcela;
-	}
-
-	public void setParcela(Parcela parcela) {
-		this.parcela = parcela;
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -142,7 +122,7 @@ public class Movimentacao implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Movimentacao other = (Movimentacao) obj;
+		Transferencia other = (Transferencia) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -150,4 +130,5 @@ public class Movimentacao implements Serializable {
 			return false;
 		return true;
 	}
+	
 }
