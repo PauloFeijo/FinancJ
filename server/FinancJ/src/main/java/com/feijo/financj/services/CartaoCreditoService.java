@@ -1,12 +1,27 @@
 package com.feijo.financj.services;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.feijo.financj.domain.CartaoCredito;
 import com.feijo.financj.domain.Conta;
+import com.feijo.financj.domain.Parcela;
+import com.feijo.financj.repositories.ParcelaRepository;
 
 @Service
 public class CartaoCreditoService extends ContaService{
+	
+	@Autowired
+	ParcelaRepository parcRepo;
+	
+	@Autowired
+	MovimentacaoService movServ;
 
 	public CartaoCredito insert(CartaoCredito obj) {
 		obj.setId(null);
@@ -21,6 +36,7 @@ public class CartaoCreditoService extends ContaService{
 	
 	private void updateData(CartaoCredito newObj, CartaoCredito obj) {
 		newObj.setDataFatura(obj.getDataFatura());
+		newObj.setDataVencimentoFatura(obj.getDataVencimentoFatura());
 		newObj.setFaturaFechada(obj.getFaturaFechada());
 		newObj.setValorLimite(obj.getValorLimite());
 		updateData((Conta) newObj, (Conta) obj);
@@ -33,6 +49,52 @@ public class CartaoCreditoService extends ContaService{
 		CartaoCredito cartao = (CartaoCredito) find(cartaoId);
 		Double faturaFutura = repo.somaFaturaFutura(cartaoId);
 		cartao.setFaturaFutura(faturaFutura);
+	}
+	
+	@Transactional
+	public void fecharFaturas() {
+		
+		List<Conta> contas = findAll();
+		
+		for (Conta conta : contas) {
+			if (! (conta instanceof CartaoCredito)) continue;
+			
+			fecharFatura((CartaoCredito) conta);
+			
+			repo.save(conta);
+		}
+	}
+	
+	@Transactional
+	private void fecharFatura(CartaoCredito cartao) {
+		
+		Date dataInicio = new Date(0); 
+		Date hoje = new Date();
+		
+		if (cartao.getDataFatura().after(hoje)) return;
+		
+		Date faturaAtual = cartao.getDataFatura();
+		Date vencto = faturaAtual;
+		vencto.setDate(vencto.getDate() + cartao.getDiasVencimentoFatura());
+		
+		Date proximaFatura = cartao.getDataFatura();
+		proximaFatura.setMonth(proximaFatura.getMonth() + 1);
+			
+		cartao.setDataFatura(proximaFatura);
+		cartao.setDataVencimentoFatura(vencto);
+		
+		Double ReceitaPeriodo = repo.somaReceitasNoPeriodo(cartao.getId(), dataInicio, hoje);
+		Double DespesaPeriodo = repo.somaDespesasNoPeriodo(cartao.getId(), dataInicio, hoje);
+		
+		cartao.setFaturaFechada(DespesaPeriodo - ReceitaPeriodo);
+		
+		// processar a fatura atual, devem ser baixadas as parcelas do mes atual
+		Set<Parcela> parcelas = parcRepo.findEmAbertoByContaPeriodo(cartao.getId(), hoje, proximaFatura);
+		
+		for (Parcela parcela : parcelas) {			
+			parcela.setValorPago(parcela.getValor());
+			movServ.insertUpdateByParcela(parcela);
+		}
 	}
 
 }

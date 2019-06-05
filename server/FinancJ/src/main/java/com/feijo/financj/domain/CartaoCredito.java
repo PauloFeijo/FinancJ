@@ -18,6 +18,12 @@ public class CartaoCredito extends Conta implements Serializable {
 	@NonNull
 	private Date dataFatura;
 	
+	@JsonFormat(pattern="dd/MM/yyyy")
+	@NonNull
+	private Date dataVencimentoFatura;
+	
+	private Integer diasVencimentoFatura;
+	
 	@NonNull
 	private Double faturaFechada;
 	
@@ -36,12 +42,14 @@ public class CartaoCredito extends Conta implements Serializable {
 	}
 
 	public CartaoCredito(Integer id, String descricao, String numero, Double saldo, Date dataFatura,
-			Double faturaFechada, Double valorLimite, Double faturaFutura) {
+			Date dataVencimentoFatura, Integer diasVencimentoFatura, Double valorLimite) {
 		super(id, descricao, numero, saldo);
 		this.dataFatura = dataFatura;
-		this.faturaFechada = faturaFechada;
+		this.dataVencimentoFatura = dataVencimentoFatura;
+		this.diasVencimentoFatura = diasVencimentoFatura;
 		this.valorLimite = valorLimite;
-		this.faturaFutura = faturaFutura;
+		this.faturaFechada = 0.0;
+		this.faturaFutura = 0.0;
 	}
 
 	public Date getDataFatura() {
@@ -50,6 +58,22 @@ public class CartaoCredito extends Conta implements Serializable {
 
 	public void setDataFatura(Date dataFatura) {
 		this.dataFatura = dataFatura;
+	}
+
+	public Date getDataVencimentoFatura() {
+		return dataVencimentoFatura;
+	}
+
+	public void setDataVencimentoFatura(Date dataVencimentoFatura) {
+		this.dataVencimentoFatura = dataVencimentoFatura;
+	}
+	
+	public Integer getDiasVencimentoFatura() {
+		return diasVencimentoFatura;
+	}
+
+	public void setDiasVencimentoFatura(Integer diasVencimentoFatura) {
+		this.diasVencimentoFatura = diasVencimentoFatura;
 	}
 
 	public Double getFaturaFechada() {

@@ -1,6 +1,7 @@
 package com.feijo.financj;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -54,28 +55,29 @@ public class FinancJApplication implements CommandLineRunner {
 
 		SimpleDateFormat dhf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-		Date dataHora = dhf.parse("01/01/2019 08:00:00");
-		Date data = df.parse("01/01/2019");
 
 		contaServ.insert(new Conta(1, "Conta Corrente", "1234", 0.0));
-		cartaoServ.insert(new CartaoCredito(2, "Cartão Nubank", "45654568465464", 0.0, data, 0.0, 6000.0, 0.0));
+		cartaoServ.insert(new CartaoCredito(2, "Cartão Nubank", "45654568465464", 0.0, df.parse("03/06/2019"), df.parse("13/06/2019"), 10, 6000.0));
 
 		catServ.insert(new CategoriaDTO(1, "Despesas", "D", null));
 		catServ.insert(new CategoriaDTO(2, "Casa", "D", 1));
 		catServ.insert(new CategoriaDTO(3, "Supermercado", "D", 2));
 		catServ.insert(new CategoriaDTO(4, "Receitas", "R", null));
 
-		movServ.insert(new MovimentacaoDTO(null, 2, 3, "Compra no supermercado", dataHora, 800.00, "D"));
-		movServ.insert(new MovimentacaoDTO(null, 1, 4, "Salário", dataHora, 1000.00, "R"));
+		Date data = dhf.parse("01/06/2019 14:34:21");
+		movServ.insert(new MovimentacaoDTO(null, 2, 3, "Compra no supermercado", data, 800.00, "D"));
+		movServ.insert(new MovimentacaoDTO(null, 1, 4, "Salário", data, 1000.00, "R"));
 
-		Parcela parc = new Parcela(null, 1, dataHora, 100.0, 100.0);
+		Parcela parc1 = new Parcela(null, 1, df.parse("01/06/2019"), 100.0, 100.0);
+		Parcela parc2 = new Parcela(null, 1, df.parse("01/07/2019"), 100.0, 0.0);
 		Set<Parcela> parcelas = new HashSet<>();
-		parcelas.add(parc);
-		PagarReceberDTO pagRecDto = new PagarReceberDTO(null, "Roupas", 1, 100.0, parc.getVencimento(), 3, 2, parcelas);
+		parcelas.addAll(Arrays.asList(parc1, parc2));
+		PagarReceberDTO pagRecDto = new PagarReceberDTO(null, "Roupas", 1, 200.0, parc1.getVencimento(), 3, 2, parcelas);
 		pagRecService.insert(pagRecDto);
 
-		transfServ.insert(new TransferenciaDTO(1, 1, 2, dataHora, 100.0));
+		transfServ.insert(new TransferenciaDTO(1, 1, 2, dhf.parse("02/06/2019 10:30:55"), 100.0));
 
+		cartaoServ.fecharFaturas();
 	}
 
 }
