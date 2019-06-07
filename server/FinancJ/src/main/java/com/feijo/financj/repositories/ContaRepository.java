@@ -21,7 +21,7 @@ public interface ContaRepository extends JpaRepository<Conta, Integer>{
 	@Query(SQL_MOV + "'D'")
     public Double somaDespesas(@Param("conta") Integer conta);
 	
-	@Query("SELECT coalesce(sum(p.valor),0.0) "
+	@Query("SELECT coalesce(sum(p.valor),0.0) - coalesce(sum(p.valorPago),0.0) "
 		+ "FROM Parcela p, PagarReceber pr  "
 		+ "WHERE p.id.pagarReceber.id = pr.id AND pr.conta.id = :conta")
 	public Double somaFaturaFutura(@Param("conta") Integer conta);

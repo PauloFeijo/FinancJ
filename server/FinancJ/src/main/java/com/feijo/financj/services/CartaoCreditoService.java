@@ -12,10 +12,15 @@ import org.springframework.stereotype.Service;
 import com.feijo.financj.domain.CartaoCredito;
 import com.feijo.financj.domain.Conta;
 import com.feijo.financj.domain.Parcela;
+import com.feijo.financj.domain.DTO.PagarFaturaDTO;
+import com.feijo.financj.domain.DTO.TransferenciaDTO;
 import com.feijo.financj.repositories.ParcelaRepository;
 
 @Service
 public class CartaoCreditoService extends ContaService{
+	
+	@Autowired
+	TransferenciaService tranfServ;
 	
 	@Autowired
 	ParcelaRepository parcRepo;
@@ -95,6 +100,23 @@ public class CartaoCreditoService extends ContaService{
 			parcela.setValorPago(parcela.getValor());
 			movServ.insertUpdateByParcela(parcela);
 		}
+	}
+	
+	@Transactional
+	public void pagarFatura(PagarFaturaDTO obj) {
+		TransferenciaDTO transf = new TransferenciaDTO(null, obj.getContaId(), obj.getCartaoId(), obj.getData(), obj.getValor());
+		tranfServ.insert(transf);
+		
+		CartaoCredito cartao = (CartaoCredito) find(obj.getCartaoId());
+		cartao.setFaturaFechada(cartao.getFaturaFechada() - obj.getValor());
+		
+		Date venctoFatura = cartao.getDataFatura();
+		venctoFatura.setDate(venctoFatura.getDate() + cartao.getDiasVencimentoFatura());
+				
+		cartao.setDataVencimentoFatura(venctoFatura);
+		
+		processarFaturaFutura(obj.getCartaoId());
+		
 	}
 
 }

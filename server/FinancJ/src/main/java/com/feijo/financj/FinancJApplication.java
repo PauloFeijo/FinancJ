@@ -16,6 +16,7 @@ import com.feijo.financj.domain.Conta;
 import com.feijo.financj.domain.Parcela;
 import com.feijo.financj.domain.DTO.CategoriaDTO;
 import com.feijo.financj.domain.DTO.MovimentacaoDTO;
+import com.feijo.financj.domain.DTO.PagarFaturaDTO;
 import com.feijo.financj.domain.DTO.PagarReceberDTO;
 import com.feijo.financj.domain.DTO.TransferenciaDTO;
 import com.feijo.financj.services.CartaoCreditoService;
@@ -78,6 +79,8 @@ public class FinancJApplication implements CommandLineRunner {
 		transfServ.insert(new TransferenciaDTO(1, 1, 2, dhf.parse("02/06/2019 10:30:55"), 100.0));
 
 		cartaoServ.fecharFaturas();
+		
+		cartaoServ.pagarFatura(new PagarFaturaDTO(2, 1, 800.0, df.parse("06/06/2019")));
 	}
 
 }
