@@ -12,11 +12,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 import org.springframework.lang.NonNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class PagarReceber implements Serializable {
@@ -46,6 +46,10 @@ public class PagarReceber implements Serializable {
 	
 	@OneToMany(mappedBy = "id.pagarReceber", cascade=CascadeType.ALL)
 	private Set<Parcela> parcelas = new HashSet<>();
+	
+	@JsonIgnore
+	@ManyToOne
+	private Usuario usuario;	
 	
 	public PagarReceber() {
 		super();
@@ -133,6 +137,14 @@ public class PagarReceber implements Serializable {
 	public void setParcelas(Set<Parcela> parcelas) {
 		this.parcelas = parcelas;
 	}
+	
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}		
 
 	@Override
 	public int hashCode() {

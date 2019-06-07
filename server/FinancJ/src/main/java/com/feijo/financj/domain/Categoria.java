@@ -34,6 +34,10 @@ public class Categoria implements Serializable {
 	@JsonIgnore
 	@OneToMany(mappedBy = "categoriaPai", cascade = CascadeType.ALL)
 	private List<Categoria> categorias = new ArrayList<>();
+	
+	@JsonIgnore
+	@ManyToOne
+	private Usuario usuario;
 
 	public Categoria(Integer id, String descricao, Tipo tipo) {
 		super();
@@ -84,6 +88,14 @@ public class Categoria implements Serializable {
 
 	public void setCategorias(List<Categoria> categorias) {
 		this.categorias = categorias;
+	}
+	
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
 	}
 
 	@Override

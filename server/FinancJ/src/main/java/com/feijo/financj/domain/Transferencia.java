@@ -11,6 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Transferencia implements Serializable {
@@ -36,6 +37,10 @@ public class Transferencia implements Serializable {
 	private Date data;
 	
 	private Double valor;
+	
+	@JsonIgnore
+	@ManyToOne
+	private Usuario usuario;	
 
 	public Transferencia() {
 		super();
@@ -105,6 +110,14 @@ public class Transferencia implements Serializable {
 	public void setValor(Double valor) {
 		this.valor = valor;
 	}
+	
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}		
 
 	@Override
 	public int hashCode() {

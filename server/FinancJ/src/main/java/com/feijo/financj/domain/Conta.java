@@ -6,9 +6,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
-import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.lang.NonNull;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Conta implements Serializable {
@@ -25,6 +27,10 @@ public class Conta implements Serializable {
 	
 	@NonNull
 	private Double saldo;
+	
+	@JsonIgnore
+	@ManyToOne
+	private Usuario usuario;
 	
 	public Conta(Integer id, String descricao, String numero, Double saldo) {
 		super();
@@ -70,6 +76,14 @@ public class Conta implements Serializable {
 		this.saldo = saldo;
 	}
 
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}	
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

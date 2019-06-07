@@ -13,6 +13,7 @@ import javax.persistence.OneToOne;
 import org.springframework.lang.NonNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.feijo.financj.domain.enums.Tipo;
 
 @Entity
@@ -45,6 +46,10 @@ public class Movimentacao implements Serializable {
 	
 	@OneToOne
 	private Parcela parcela;
+	
+	@JsonIgnore
+	@ManyToOne
+	private Usuario usuario;	
 	
 	public Movimentacao() {
 		super();
@@ -125,6 +130,14 @@ public class Movimentacao implements Serializable {
 	public void setParcela(Parcela parcela) {
 		this.parcela = parcela;
 	}
+	
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}		
 
 	@Override
 	public int hashCode() {
