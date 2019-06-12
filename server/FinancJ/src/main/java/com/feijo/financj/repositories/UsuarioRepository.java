@@ -8,4 +8,5 @@ import com.feijo.financj.domain.Usuario;
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, String>{
 
+	public Usuario findByUsuario(String usuario);
 }

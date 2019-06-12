@@ -10,25 +10,35 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.feijo.financj.domain.CartaoCredito;
 import com.feijo.financj.domain.Conta;
 import com.feijo.financj.domain.Parcela;
+import com.feijo.financj.domain.Usuario;
 import com.feijo.financj.domain.DTO.CategoriaDTO;
 import com.feijo.financj.domain.DTO.MovimentacaoDTO;
 import com.feijo.financj.domain.DTO.PagarFaturaDTO;
 import com.feijo.financj.domain.DTO.PagarReceberDTO;
 import com.feijo.financj.domain.DTO.TransferenciaDTO;
+import com.feijo.financj.domain.enums.Perfil;
 import com.feijo.financj.services.CartaoCreditoService;
 import com.feijo.financj.services.CategoriaService;
 import com.feijo.financj.services.ContaService;
 import com.feijo.financj.services.MovimentacaoService;
 import com.feijo.financj.services.PagarReceberService;
 import com.feijo.financj.services.TransferenciaService;
+import com.feijo.financj.services.UsuarioService;
 
 @SpringBootApplication
 public class FinancJApplication implements CommandLineRunner {
+	
+	@Autowired
+	private BCryptPasswordEncoder pe;	
 
+	@Autowired
+	private UsuarioService userServ;
+	
 	@Autowired
 	private ContaService contaServ;
 
@@ -53,9 +63,13 @@ public class FinancJApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-
+		
 		SimpleDateFormat dhf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+		
+		Usuario user = new Usuario("teste", pe.encode("teste"), "teste@teste.com", "Usuário de teste");
+		user.addPerfil(Perfil.ADMIN);
+		userServ.insert(user);
 
 		contaServ.insert(new Conta(1, "Conta Corrente", "1234", 0.0));
 		cartaoServ.insert(new CartaoCredito(2, "Cartão Nubank", "45654568465464", 0.0, df.parse("03/06/2019"), df.parse("13/06/2019"), 10, 6000.0));

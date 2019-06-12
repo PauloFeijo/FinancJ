@@ -1,9 +1,17 @@
 package com.feijo.financj.domain;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CollectionTable;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.feijo.financj.domain.enums.Perfil;
 
 @Entity
 public class Usuario implements Serializable {
@@ -11,9 +19,18 @@ public class Usuario implements Serializable {
 
 	@Id
 	private String usuario;
+	@JsonIgnore
 	private String senha;
 	private String email;
 	private String nome;
+	
+	@ElementCollection(fetch=FetchType.EAGER)
+	@CollectionTable(name="PERFIS")	
+	private Set<Perfil> perfis = new HashSet<>();
+	
+	{
+		perfis.add(Perfil.USER);
+	};
 
 	public Usuario() {
 		super();
@@ -57,6 +74,18 @@ public class Usuario implements Serializable {
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+	
+	public Set<Perfil> getPerfis() {
+		return perfis;
+	}
+
+	public void setPerfis(Set<Perfil> perfis) {
+		this.perfis = perfis;
+	}
+	
+	public void addPerfil(Perfil perfil) {
+		this.perfis.add(perfil);
 	}
 
 	@Override
