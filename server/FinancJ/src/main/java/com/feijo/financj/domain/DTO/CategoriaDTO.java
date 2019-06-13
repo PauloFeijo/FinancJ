@@ -2,12 +2,6 @@ package com.feijo.financj.domain.DTO;
 
 import java.io.Serializable;
 
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.feijo.financj.domain.Categoria;
-
 public class CategoriaDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	

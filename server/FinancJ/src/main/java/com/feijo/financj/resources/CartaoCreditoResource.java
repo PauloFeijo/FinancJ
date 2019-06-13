@@ -39,9 +39,6 @@ public class CartaoCreditoResource {
 		
 		obj = serv.update(obj);
 
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().
-				path("/{id}").buildAndExpand(obj.getId()).toUri();
-		
 		return ResponseEntity.noContent().build();
 	}		
 

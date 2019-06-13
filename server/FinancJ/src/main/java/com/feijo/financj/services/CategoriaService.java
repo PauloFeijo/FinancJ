@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.feijo.financj.domain.Categoria;
-import com.feijo.financj.domain.Conta;
 import com.feijo.financj.domain.DTO.CategoriaDTO;
 import com.feijo.financj.domain.enums.Tipo;
 import com.feijo.financj.repositories.CategoriaRepository;

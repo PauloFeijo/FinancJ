@@ -56,9 +56,6 @@ public class UsuarioResource {
 		
 		obj = serv.update(obj);
 
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().
-				path("/{usuario}").buildAndExpand(obj.getUsuario()).toUri();
-		
 		return ResponseEntity.noContent().build();
 	}	
 	

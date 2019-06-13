@@ -1,5 +1,6 @@
 package com.feijo.financj.services;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -79,11 +80,17 @@ public class CartaoCreditoService extends ContaService{
 		if (cartao.getDataFatura().after(hoje)) return;
 		
 		Date faturaAtual = cartao.getDataFatura();
+		
 		Date vencto = faturaAtual;
-		vencto.setDate(vencto.getDate() + cartao.getDiasVencimentoFatura());
+		Calendar c = Calendar.getInstance();
+		c.setTime(vencto);
+		c.add(Calendar.DATE, cartao.getDiasVencimentoFatura());
+		vencto = c.getTime();
 		
 		Date proximaFatura = cartao.getDataFatura();
-		proximaFatura.setMonth(proximaFatura.getMonth() + 1);
+		c.setTime(proximaFatura);
+		c.add(Calendar.MONTH, 1);
+		proximaFatura = c.getTime();
 			
 		cartao.setDataFatura(proximaFatura);
 		cartao.setDataVencimentoFatura(vencto);
@@ -111,7 +118,10 @@ public class CartaoCreditoService extends ContaService{
 		cartao.setFaturaFechada(cartao.getFaturaFechada() - obj.getValor());
 		
 		Date venctoFatura = cartao.getDataFatura();
-		venctoFatura.setDate(venctoFatura.getDate() + cartao.getDiasVencimentoFatura());
+		Calendar c = Calendar.getInstance();
+		c.setTime(venctoFatura);
+		c.add(Calendar.DATE, cartao.getDiasVencimentoFatura());
+		venctoFatura = c.getTime();
 				
 		cartao.setDataVencimentoFatura(venctoFatura);
 		

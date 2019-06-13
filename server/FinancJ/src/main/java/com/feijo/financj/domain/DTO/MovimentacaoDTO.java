@@ -1,20 +1,11 @@
 package com.feijo.financj.domain.DTO;
 
 import java.io.Serializable;
-import java.util.Currency;
 import java.util.Date;
 
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-
-import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.lang.NonNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.feijo.financj.domain.Categoria;
-import com.feijo.financj.domain.Conta;
 
 public class MovimentacaoDTO implements Serializable {
 	private static final long serialVersionUID = 1L;

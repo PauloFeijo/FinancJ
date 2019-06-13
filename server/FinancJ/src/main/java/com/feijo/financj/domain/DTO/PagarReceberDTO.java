@@ -1,26 +1,13 @@
 package com.feijo.financj.domain.DTO;
 
 import java.io.Serializable;
-import java.util.Currency;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-
-import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.lang.NonNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.feijo.financj.domain.Categoria;
-import com.feijo.financj.domain.Conta;
 import com.feijo.financj.domain.Parcela;
 
 public class PagarReceberDTO implements Serializable {

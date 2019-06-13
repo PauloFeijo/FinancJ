@@ -3,20 +3,9 @@ package com.feijo.financj.domain.DTO;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-
 import org.springframework.lang.NonNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.feijo.financj.domain.Categoria;
-import com.feijo.financj.domain.Conta;
-import com.feijo.financj.domain.Movimentacao;
 
 public class TransferenciaDTO implements Serializable {
 	private static final long serialVersionUID = 1L;

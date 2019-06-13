@@ -54,11 +54,8 @@ public class PagarReceberResource {
 	@RequestMapping(value = "/{id}", method=RequestMethod.PUT)
 	public ResponseEntity<Void> update(@Valid @RequestBody PagarReceberDTO objDto, @PathVariable Integer id) {
 		
-		PagarReceber obj = serv.update(objDto);
+		serv.update(objDto);
 
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().
-				path("/{id}").buildAndExpand(obj.getId()).toUri();
-		
 		return ResponseEntity.noContent().build();
 	}	
 	

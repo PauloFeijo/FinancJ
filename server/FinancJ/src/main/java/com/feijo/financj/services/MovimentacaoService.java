@@ -263,19 +263,4 @@ public class MovimentacaoService {
 		return listDto;
 	}
 
-	private List<Movimentacao> fromListDTO(List<MovimentacaoDTO> listDto) {
-
-		if (listDto == null) {
-			return null;
-		}
-
-		List<Movimentacao> list = new ArrayList<>();
-
-		for (MovimentacaoDTO movDto : listDto) {
-			list.add(fromDTO(movDto));
-		}
-
-		return list;
-	}
-
 }

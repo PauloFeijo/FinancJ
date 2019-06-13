@@ -55,11 +55,8 @@ public class CategoriaResource {
 	@RequestMapping(value = "/{id}", method=RequestMethod.PUT)
 	public ResponseEntity<Void> update(@Valid @RequestBody CategoriaDTO objDto, @PathVariable Integer id) {
 		
-		Categoria obj = serv.update(objDto);
+		serv.update(objDto);
 
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().
-				path("/{id}").buildAndExpand(obj.getId()).toUri();
-		
 		return ResponseEntity.noContent().build();
 	}	
 	

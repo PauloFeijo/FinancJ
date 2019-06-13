@@ -276,19 +276,4 @@ public class PagarReceberService {
 		return listDto;
 	}
 
-	private List<PagarReceber> fromListDTO(List<PagarReceberDTO> listDto) {
-
-		if (listDto == null) {
-			return null;
-		}
-
-		List<PagarReceber> list = new ArrayList<>();
-
-		for (PagarReceberDTO movDto : listDto) {
-			list.add(fromDTO(movDto));
-		}
-
-		return list;
-	}
-
 }

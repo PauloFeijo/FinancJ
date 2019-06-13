@@ -5,10 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.feijo.financj.domain.Transferencia;
 import com.feijo.financj.domain.Conta;
+import com.feijo.financj.domain.Transferencia;
 import com.feijo.financj.domain.DTO.TransferenciaDTO;
-import com.feijo.financj.domain.enums.Tipo;
 import com.feijo.financj.repositories.TransferenciaRepository;
 import com.feijo.financj.services.exceptions.ObjectNotFoundException;
 

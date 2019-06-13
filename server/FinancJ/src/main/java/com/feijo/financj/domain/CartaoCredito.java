@@ -8,7 +8,6 @@ import javax.persistence.Entity;
 import org.springframework.lang.NonNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonTypeName;
 
 @Entity
 public class CartaoCredito extends Conta implements Serializable {
