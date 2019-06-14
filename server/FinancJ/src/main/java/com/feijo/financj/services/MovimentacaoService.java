@@ -35,6 +35,9 @@ public class MovimentacaoService {
 
 	@Autowired
 	CategoriaService catServ;
+	
+	@Autowired
+	UsuarioService userServ;	
 
 	public Movimentacao find(Integer id) {
 		
@@ -53,7 +56,7 @@ public class MovimentacaoService {
 	}
 
 	public List<MovimentacaoDTO> findAll() {
-		return toListDTO(repo.findAll());
+		return toListDTO(repo.findByUsuario(userServ.getUsuarioLogado()));
 	}
 
 	@Transactional
@@ -95,6 +98,7 @@ public class MovimentacaoService {
 		mov.setTipo(parc.getPagarReceber().getCategoria().getTipo());
 		mov.setValor(parc.getValorPago());
 		mov.setParcela(parc);
+		mov.setUsuario(userServ.getUsuarioLogado());
 		
 		contasProcessarSaldo.add(mov.getConta());
 		
@@ -136,12 +140,14 @@ public class MovimentacaoService {
 		saida.setDescricao("Transferência para a conta "+transf.getDestino().getDescricao());
 		saida.setTipo(Tipo.DESPESA);
 		saida.setValor(transf.getValor());
+		saida.setUsuario(userServ.getUsuarioLogado());
 		
 		entrada.setConta(transf.getDestino());
 		entrada.setData(transf.getData());
 		entrada.setDescricao("Transferência da conta "+transf.getOrigem().getDescricao());
 		entrada.setTipo(Tipo.RECEITA);
 		entrada.setValor(transf.getValor());
+		entrada.setUsuario(userServ.getUsuarioLogado());
 		
 		repo.saveAll(Arrays.asList(saida, entrada));
 		
@@ -244,6 +250,7 @@ public class MovimentacaoService {
 		obj.setData(objDto.getData());
 		obj.setValor(objDto.getValor());
 		obj.setTipo(Tipo.toEnum(objDto.getTipo()));
+		obj.setUsuario(userServ.getUsuarioLogado());
 
 		return obj;
 	}

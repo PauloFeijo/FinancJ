@@ -22,6 +22,9 @@ public class TransferenciaService {
 	
 	@Autowired
 	MovimentacaoService movServ;
+	
+	@Autowired
+	UsuarioService userServ;	
 
 	public Transferencia find(Integer id) {
 		Transferencia obj = repo.findById(id).orElse(null);
@@ -34,7 +37,7 @@ public class TransferenciaService {
 	}
 
 	public List<Transferencia> findAll() {
-		return repo.findAll();
+		return repo.findByUsuario(userServ.getUsuarioLogado());
 	}
 
 	public Transferencia insert(TransferenciaDTO objDto) {
@@ -75,5 +78,6 @@ public class TransferenciaService {
 		obj.setDestino(destino);
 		obj.setData(objDto.getData());
 		obj.setValor(objDto.getValor());
+		obj.setUsuario(userServ.getUsuarioLogado());
 	}
 }

@@ -10,6 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 
+import org.springframework.lang.NonNull;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.feijo.financj.domain.enums.Perfil;
 
@@ -20,8 +22,11 @@ public class Usuario implements Serializable {
 	@Id
 	private String usuario;
 	@JsonIgnore
+	@NonNull
 	private String senha;
+	@NonNull
 	private String email;
+	@NonNull
 	private String nome;
 	
 	@ElementCollection(fetch=FetchType.EAGER)

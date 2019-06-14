@@ -16,6 +16,9 @@ public class ContaService {
 
 	@Autowired
 	ContaRepository repo;
+	
+	@Autowired
+	UsuarioService userServ;	
 
 	public Conta find(Integer id) {
 
@@ -28,18 +31,19 @@ public class ContaService {
 	}
 
 	public List<Conta> findAll() {
-		return repo.findAll();
+		return repo.findByUsuario(userServ.getUsuarioLogado());
 	}
 
 	public Conta insert(Conta obj) {
-		obj.setId(null);
-		return repo.save(obj);
+		Conta newObj = new Conta();
+		updateData(newObj, obj);
+		return repo.save(newObj);		
 	}
 
 	public Conta update(Conta obj) {
 		Conta newObj = find(obj.getId());
 		updateData(newObj, obj);
-		return repo.save(newObj);
+		return repo.save(newObj);	
 	}
 	
 	public void delete(Integer id) {
@@ -51,6 +55,7 @@ public class ContaService {
 		newObj.setDescricao(obj.getDescricao());
 		newObj.setNumero(obj.getNumero());
 		newObj.setSaldo(obj.getSaldo());
+		newObj.setUsuario(userServ.getUsuarioLogado());
 	}
 	
 	public void processarSaldo(Integer contaId) {

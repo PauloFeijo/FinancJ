@@ -1,6 +1,7 @@
 package com.feijo.financj.repositories;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -8,9 +9,12 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.feijo.financj.domain.Conta;
+import com.feijo.financj.domain.Usuario;
 
 @Repository
 public interface ContaRepository extends JpaRepository<Conta, Integer>{
+	
+	public List<Conta> findByUsuario(Usuario usuario);
 	
 	String SQL_MOV = "select coalesce(sum(valor),0.0) from Movimentacao where conta.id = :conta and tipo = ";
 	String COND_PERIODO = " and data between :inicio and :fim";

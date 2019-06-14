@@ -46,6 +46,9 @@ public class PagarReceberService {
 	@Autowired
 	MovimentacaoService movServ;
 	
+	@Autowired
+	UsuarioService userServ;	
+	
 	public PagarReceber find(Integer id) {
 		
 		PagarReceber obj = repo.findById(id).orElse(null);
@@ -63,7 +66,7 @@ public class PagarReceberService {
 	}
 
 	public List<PagarReceberDTO> findAll() {
-		return toListDTO(repo.findAll());
+		return toListDTO(repo.findByUsuario(userServ.getUsuarioLogado()));
 	}
 
 	@Transactional
@@ -94,6 +97,7 @@ public class PagarReceberService {
 	private PagarReceber insertOrUpdate(PagarReceberDTO objDto) {
 		
 		PagarReceber obj = fromDTO(objDto);
+		obj.setUsuario(userServ.getUsuarioLogado());
 		
 		updateParcelas(objDto, obj);
 		

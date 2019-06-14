@@ -16,6 +16,9 @@ public class CategoriaService {
 
 	@Autowired
 	CategoriaRepository repo;
+	
+	@Autowired
+	UsuarioService userServ;
 
 	public Categoria find(Integer id) {
 		Categoria obj = repo.findById(id).orElse(null);
@@ -28,19 +31,19 @@ public class CategoriaService {
 	}
 
 	public List<Categoria> findAll() {
-		return repo.findAll();
+		return repo.findByUsuario(userServ.getUsuarioLogado());
 	}
 
 	public Categoria insert(CategoriaDTO objDto) {
-		Categoria obj = new Categoria();
-		updateData(obj, objDto);
-		return repo.save(obj);
+		Categoria newObj = new Categoria();
+		updateData(newObj, objDto);
+		return repo.save(newObj);		
 	}
 
 	public Categoria update(CategoriaDTO objDto) {
-		Categoria obj = find(objDto.getId());
-		updateData(obj, objDto);
-		return repo.save(obj);
+		Categoria newObj = find(objDto.getId());
+		updateData(newObj, objDto);
+		return repo.save(newObj);
 	}
 	
 	public void delete(Integer id) {
@@ -58,5 +61,8 @@ public class CategoriaService {
 		} else {
 			obj.setCategoriaPai(null);
 		}
+		
+		obj.setUsuario(userServ.getUsuarioLogado());
+
 	}
 }

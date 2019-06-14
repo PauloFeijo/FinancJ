@@ -30,8 +30,9 @@ public class CartaoCreditoService extends ContaService{
 	MovimentacaoService movServ;
 
 	public CartaoCredito insert(CartaoCredito obj) {
-		obj.setId(null);
-		return repo.save(obj);
+		CartaoCredito newObj = new CartaoCredito();
+		updateData(newObj, obj);
+		return repo.save(newObj);
 	}
 
 	public CartaoCredito update(CartaoCredito obj) {
@@ -41,11 +42,11 @@ public class CartaoCreditoService extends ContaService{
 	}	
 	
 	private void updateData(CartaoCredito newObj, CartaoCredito obj) {
+		updateData((Conta) newObj, (Conta) obj);
 		newObj.setDataFatura(obj.getDataFatura());
 		newObj.setDataVencimentoFatura(obj.getDataVencimentoFatura());
 		newObj.setFaturaFechada(obj.getFaturaFechada());
 		newObj.setValorLimite(obj.getValorLimite());
-		updateData((Conta) newObj, (Conta) obj);
 	}
 	
 	public void processarFaturaFutura(Integer cartaoId) {
