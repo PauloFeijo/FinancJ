@@ -3,23 +3,23 @@ package com.feijo.financj.domain.DTO;
 import java.io.Serializable;
 import java.util.Date;
 
-import org.springframework.lang.NonNull;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class PagarFaturaDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	@NonNull
+	@NotNull(message = "Campo obrigatório")
 	private Integer cartaoId;
 	
-	@NonNull
+	@NotNull(message = "Campo obrigatório")
 	private Integer contaId;
 	
-	@NonNull
+	@NotNull(message = "Campo obrigatório")
 	private Double valor;
 	
-	@NonNull
+	@NotNull(message = "Campo obrigatório")
 	@JsonFormat(pattern="dd/MM/yyyy hh:mm:ss")
 	private Date data;
 	

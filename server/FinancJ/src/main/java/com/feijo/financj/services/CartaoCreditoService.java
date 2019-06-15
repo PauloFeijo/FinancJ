@@ -45,8 +45,10 @@ public class CartaoCreditoService extends ContaService{
 		updateData((Conta) newObj, (Conta) obj);
 		newObj.setDataFatura(obj.getDataFatura());
 		newObj.setDataVencimentoFatura(obj.getDataVencimentoFatura());
+		newObj.setDiasVencimentoFatura(obj.getDiasVencimentoFatura());
 		newObj.setFaturaFechada(obj.getFaturaFechada());
 		newObj.setValorLimite(obj.getValorLimite());
+		newObj.setFaturaFutura(obj.getFaturaFutura());
 	}
 	
 	public void processarFaturaFutura(Integer cartaoId) {

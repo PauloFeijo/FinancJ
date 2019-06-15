@@ -5,19 +5,18 @@ import java.io.Serializable;
 import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
-import org.springframework.lang.NonNull;
+import javax.validation.constraints.NotNull;
 
 @Embeddable
 public class ParcelaPK implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@ManyToOne	
-	@NonNull
+	@NotNull(message = "Campo obrigatório")
 	@JoinColumn(name="pagarReceberId")
 	private PagarReceber pagarReceber;
 	
-	@NonNull
+	@NotNull(message = "Campo obrigatório")
 	private Integer numParcela;
 
 	public PagarReceber getPagarReceber() {

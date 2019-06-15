@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.springframework.lang.NonNull;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.feijo.financj.domain.Parcela;
@@ -15,28 +15,28 @@ public class PagarReceberDTO implements Serializable {
 	
 	private Integer id;
 	
-	@NonNull
+	@NotNull(message = "Campo obrigatório")
 	private String descricao;
 	
-	@NonNull
+	@NotNull(message = "Campo obrigatório")
 	private Integer numParcelas;
 	
-	@NonNull
+	@NotNull(message = "Campo obrigatório")
 	private Double valorTotal;
 	
-	@NonNull
+	@NotNull(message = "Campo obrigatório")
 	@JsonFormat(pattern="dd/MM/yyyy")
 	private Date vencimento;
 	
-	@NonNull
+	@NotNull(message = "Campo obrigatório")
 	private Double valorPago;
 	
-	@NonNull
+	@NotNull(message = "Campo obrigatório")
 	private Integer categoriaId;
 	
 	private String categoriaDescricao;
 	
-	@NonNull
+	@NotNull(message = "Campo obrigatório")
 	private Integer contaId;
 	
 	private String contaDescricao;

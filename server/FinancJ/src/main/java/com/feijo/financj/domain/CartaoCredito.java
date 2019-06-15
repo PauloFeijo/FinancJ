@@ -4,8 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Entity;
-
-import org.springframework.lang.NonNull;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -14,22 +13,23 @@ public class CartaoCredito extends Conta implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@JsonFormat(pattern="dd/MM/yyyy")
-	@NonNull
+	@NotNull(message = "Campo obrigatório")
 	private Date dataFatura;
 	
 	@JsonFormat(pattern="dd/MM/yyyy")
-	@NonNull
+	@NotNull(message = "Campo obrigatório")
 	private Date dataVencimentoFatura;
 	
+	@NotNull(message = "Campo obrigatório")
 	private Integer diasVencimentoFatura;
 	
-	@NonNull
+	@NotNull(message = "Campo obrigatório")
 	private Double faturaFechada;
 	
-	@NonNull
+	@NotNull(message = "Campo obrigatório")
 	private Double valorLimite;
 	
-	@NonNull
+	@NotNull(message = "Campo obrigatório")
 	private Double faturaFutura;
 	
 	public CartaoCredito() {

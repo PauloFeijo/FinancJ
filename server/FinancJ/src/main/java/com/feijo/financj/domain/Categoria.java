@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.feijo.financj.domain.enums.Tipo;
@@ -23,7 +24,11 @@ public class Categoria implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
+	
+	@NotNull(message = "Campo obrigatório")
 	private String descricao;
+	
+	@NotNull(message = "Campo obrigatório")
 	private String tipo;
 
 	@JsonIgnore

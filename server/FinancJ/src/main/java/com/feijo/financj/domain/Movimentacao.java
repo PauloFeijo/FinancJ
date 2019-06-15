@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.lang.NonNull;
 
@@ -24,24 +25,24 @@ public class Movimentacao implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
-	@NonNull
+	@NotNull(message = "Campo obrigatório")
 	@ManyToOne
 	private Conta conta;
 	
 	@ManyToOne
 	private Categoria categoria;
 	
-	@NonNull
+	@NotNull(message = "Campo obrigatório")
 	private String descricao;
 	
-	@NonNull
+	@NotNull(message = "Campo obrigatório")
 	@JsonFormat(pattern="dd/MM/yyyy hh:mm:ss")
 	private Date data;
 	
-	@NonNull
+	@NotNull(message = "Campo obrigatório")
 	private Double valor;
 	
-	@NonNull
+	@NotNull(message = "Campo obrigatório")
 	private String tipo;
 	
 	@OneToOne

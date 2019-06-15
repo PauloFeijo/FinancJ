@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -21,21 +22,27 @@ public class Transferencia implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)	
 	private Integer id;
 	
+	@NotNull(message = "Campo obrigatório")
 	@ManyToOne
 	private Conta origem;
 	
+	@NotNull(message = "Campo obrigatório")
 	@ManyToOne
 	private Conta destino;
 	
+	@NotNull(message = "Campo obrigatório")
 	@OneToOne
 	private Movimentacao entrada;
 	
+	@NotNull(message = "Campo obrigatório")
 	@OneToOne
 	private Movimentacao saida;
 	
+	@NotNull(message = "Campo obrigatório")
 	@JsonFormat(pattern="dd/MM/yyyy hh:mm:ss")
 	private Date data;
 	
+	@NotNull(message = "Campo obrigatório")
 	private Double valor;
 	
 	@JsonIgnore

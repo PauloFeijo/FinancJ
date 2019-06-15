@@ -2,12 +2,19 @@ package com.feijo.financj.domain.DTO;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotNull;
+
 public class CategoriaDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private Integer id;
+	
+	@NotNull(message = "Campo obrigatório")
 	private String descricao;
+	
+	@NotNull(message = "Campo obrigatório")
 	private String tipo;
+	
 	private Integer categoriaPaiId;
 	
 	public CategoriaDTO() {

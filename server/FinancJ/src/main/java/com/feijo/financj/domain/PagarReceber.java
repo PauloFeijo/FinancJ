@@ -12,8 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-
-import org.springframework.lang.NonNull;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -26,21 +25,21 @@ public class PagarReceber implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)	
 	private Integer id;
 	
-	@NonNull
+	@NotNull(message = "Campo obrigatório")
 	private String descricao;
 	
-	@NonNull
+	@NotNull(message = "Campo obrigatório")
 	private Integer numParcelas;
 	
-	@NonNull
+	@NotNull(message = "Campo obrigatório")
 	@JsonFormat(pattern="dd/MM/yyyy")
 	private Date vencimento;
 	
-	@NonNull
+	@NotNull(message = "Campo obrigatório")
 	@ManyToOne
 	private Categoria categoria;
 	
-	@NonNull
+	@NotNull(message = "Campo obrigatório")
 	@ManyToOne
 	private Conta conta;
 	

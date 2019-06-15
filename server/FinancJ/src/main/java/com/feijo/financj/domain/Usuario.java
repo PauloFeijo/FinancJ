@@ -9,10 +9,8 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 
-import org.springframework.lang.NonNull;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.feijo.financj.domain.enums.Perfil;
 
 @Entity
@@ -21,12 +19,14 @@ public class Usuario implements Serializable {
 
 	@Id
 	private String usuario;
-	@JsonIgnore
-	@NonNull
+	
+	@NotNull(message = "Campo obrigatório")
 	private String senha;
-	@NonNull
+	
+	@NotNull(message = "Campo obrigatório")
 	private String email;
-	@NonNull
+	
+	@NotNull(message = "Campo obrigatório")
 	private String nome;
 	
 	@ElementCollection(fetch=FetchType.EAGER)

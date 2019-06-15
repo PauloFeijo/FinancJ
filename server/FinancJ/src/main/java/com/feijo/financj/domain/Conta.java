@@ -7,8 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-
-import org.springframework.lang.NonNull;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -20,12 +19,12 @@ public class Conta implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)	
 	private Integer id;
 	
-	@NonNull
+	@NotNull(message = "Campo obrigatório")
 	private String descricao;
 	
 	private String numero;
 	
-	@NonNull
+	@NotNull(message = "Campo obrigatório")
 	private Double saldo;
 	
 	@JsonIgnore

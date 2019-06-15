@@ -5,8 +5,7 @@ import java.util.Date;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-
-import org.springframework.lang.NonNull;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -19,11 +18,11 @@ public class Parcela implements Serializable {
 	@EmbeddedId
 	private ParcelaPK id = new ParcelaPK();
 
-	@NonNull
+	@NotNull(message = "Campo obrigatório")
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date vencimento;
 
-	@NonNull
+	@NotNull(message = "Campo obrigatório")
 	private Double valor;
 
 	private Double valorPago;

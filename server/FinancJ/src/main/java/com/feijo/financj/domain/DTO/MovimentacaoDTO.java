@@ -3,7 +3,7 @@ package com.feijo.financj.domain.DTO;
 import java.io.Serializable;
 import java.util.Date;
 
-import org.springframework.lang.NonNull;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -12,26 +12,27 @@ public class MovimentacaoDTO implements Serializable {
 	
 	private Integer id;
 	
-	@NonNull()
+	@NotNull(message = "Campo obrigatório")
 	private Integer contaId;
 	
 	private String contaDescricao;
 	
+	@NotNull(message = "Campo obrigatório")
 	private Integer categoriaId;
 	
 	private String categoriaDescricao;
 	
-	@NonNull()
+	@NotNull(message = "Campo obrigatório")
 	private String descricao;
 	
-	@NonNull()
+	@NotNull(message = "Campo obrigatório")
 	@JsonFormat(pattern="dd/MM/yyyy hh:mm:ss")
 	private Date data;
 	
-	@NonNull()
+	@NotNull(message = "Campo obrigatório")
 	private Double valor;
 	
-	@NonNull()
+	@NotNull(message = "Campo obrigatório")
 	private String tipo;
 	
 	public MovimentacaoDTO() {
