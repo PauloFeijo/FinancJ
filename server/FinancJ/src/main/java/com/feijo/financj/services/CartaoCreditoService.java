@@ -28,6 +28,11 @@ public class CartaoCreditoService extends ContaService{
 	
 	@Autowired
 	MovimentacaoService movServ;
+	
+	@Override
+	public CartaoCredito find(Integer id) {
+		return (CartaoCredito) super.find(id);
+	}
 
 	public CartaoCredito insert(CartaoCredito obj) {
 		CartaoCredito newObj = new CartaoCredito();
