@@ -18,7 +18,7 @@ import com.feijo.financj.domain.Usuario;
 import com.feijo.financj.services.UsuarioService;
 
 @RestController
-@RequestMapping(value = "/usuarios")
+@RequestMapping(value = "/usuario")
 public class UsuarioResource {
 
 	@Autowired

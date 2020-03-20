@@ -14,36 +14,37 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.feijo.financj.domain.Conta;
-import com.feijo.financj.services.ContaService;
+import com.feijo.financj.domain.Categoria;
+import com.feijo.financj.domain.DTO.CategoriaDTO;
+import com.feijo.financj.services.CategoriaService;
 
 @RestController
-@RequestMapping(value = "/contas")
-public class ContaResource {
+@RequestMapping(value = "/categoria")
+public class CategoriaResource {
 
 	@Autowired
-	private ContaService serv;
+	private CategoriaService serv;
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> find(@PathVariable Integer id) {
 		
-		Conta conta = serv.find(id);
+		Categoria categoria = serv.find(id);
 		
-		return ResponseEntity.ok().body(conta);
+		return ResponseEntity.ok().body(categoria);
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public ResponseEntity<List<Conta>> findAll() {
+	public ResponseEntity<List<Categoria>> findAll() {
 
-		List<Conta>  lista = serv.findAll();
+		List<Categoria>  lista = serv.findAll();
 
 		return ResponseEntity.ok().body(lista);
 	}
 	
 	@RequestMapping(method=RequestMethod.POST)
-	public ResponseEntity<Void> insert(@Valid @RequestBody Conta obj) {
+	public ResponseEntity<Void> insert(@Valid @RequestBody CategoriaDTO objDto) {
 		
-		obj = serv.insert(obj);
+		Categoria obj = serv.insert(objDto);
 
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().
 				path("/{id}").buildAndExpand(obj.getId()).toUri();
@@ -52,9 +53,9 @@ public class ContaResource {
 	}
 	
 	@RequestMapping(value = "/{id}", method=RequestMethod.PUT)
-	public ResponseEntity<Void> update(@Valid @RequestBody Conta obj, @PathVariable Integer id) {
+	public ResponseEntity<Void> update(@Valid @RequestBody CategoriaDTO objDto, @PathVariable Integer id) {
 		
-		obj = serv.update(obj);
+		serv.update(objDto);
 
 		return ResponseEntity.noContent().build();
 	}	

@@ -13,37 +13,37 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import com.feijo.financj.domain.Movimentacao;
-import com.feijo.financj.domain.DTO.MovimentacaoDTO;
-import com.feijo.financj.services.MovimentacaoService;
+
+import com.feijo.financj.domain.Conta;
+import com.feijo.financj.services.ContaService;
 
 @RestController
-@RequestMapping(value = "/movimentacoes")
-public class MovimentacaoResource {
+@RequestMapping(value = "/conta")
+public class ContaResource {
 
 	@Autowired
-	private MovimentacaoService serv;
+	private ContaService serv;
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> find(@PathVariable Integer id) {
 		
-		MovimentacaoDTO movimentacao = serv.findDTO(id);
+		Conta conta = serv.find(id);
 		
-		return ResponseEntity.ok().body(movimentacao);
+		return ResponseEntity.ok().body(conta);
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public ResponseEntity<List<MovimentacaoDTO>> findAll() {
+	public ResponseEntity<List<Conta>> findAll() {
 
-		List<MovimentacaoDTO>  lista = serv.findAll();
+		List<Conta>  lista = serv.findAll();
 
 		return ResponseEntity.ok().body(lista);
 	}
 	
 	@RequestMapping(method=RequestMethod.POST)
-	public ResponseEntity<Void> insert(@Valid @RequestBody MovimentacaoDTO objDto) {
+	public ResponseEntity<Void> insert(@Valid @RequestBody Conta obj) {
 		
-		Movimentacao obj = serv.insert(objDto);
+		obj = serv.insert(obj);
 
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().
 				path("/{id}").buildAndExpand(obj.getId()).toUri();
@@ -52,9 +52,9 @@ public class MovimentacaoResource {
 	}
 	
 	@RequestMapping(value = "/{id}", method=RequestMethod.PUT)
-	public ResponseEntity<Void> update(@Valid @RequestBody MovimentacaoDTO objDto, @PathVariable Integer id) {
+	public ResponseEntity<Void> update(@Valid @RequestBody Conta obj, @PathVariable Integer id) {
 		
-		serv.update(objDto);
+		obj = serv.update(obj);
 
 		return ResponseEntity.noContent().build();
 	}	

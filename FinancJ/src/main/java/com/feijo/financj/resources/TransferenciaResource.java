@@ -18,7 +18,7 @@ import com.feijo.financj.domain.DTO.TransferenciaDTO;
 import com.feijo.financj.services.TransferenciaService;
 
 @RestController
-@RequestMapping(value = "/transferencias")
+@RequestMapping(value = "/transferencia")
 public class TransferenciaResource {
 
 	@Autowired

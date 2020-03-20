@@ -13,38 +13,37 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import com.feijo.financj.domain.Categoria;
-import com.feijo.financj.domain.DTO.CategoriaDTO;
-import com.feijo.financj.services.CategoriaService;
+import com.feijo.financj.domain.Movimentacao;
+import com.feijo.financj.domain.DTO.MovimentacaoDTO;
+import com.feijo.financj.services.MovimentacaoService;
 
 @RestController
-@RequestMapping(value = "/categorias")
-public class CategoriaResource {
+@RequestMapping(value = "/movimentacao")
+public class MovimentacaoResource {
 
 	@Autowired
-	private CategoriaService serv;
+	private MovimentacaoService serv;
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> find(@PathVariable Integer id) {
 		
-		Categoria categoria = serv.find(id);
+		MovimentacaoDTO movimentacao = serv.findDTO(id);
 		
-		return ResponseEntity.ok().body(categoria);
+		return ResponseEntity.ok().body(movimentacao);
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public ResponseEntity<List<Categoria>> findAll() {
+	public ResponseEntity<List<MovimentacaoDTO>> findAll() {
 
-		List<Categoria>  lista = serv.findAll();
+		List<MovimentacaoDTO>  lista = serv.findAll();
 
 		return ResponseEntity.ok().body(lista);
 	}
 	
 	@RequestMapping(method=RequestMethod.POST)
-	public ResponseEntity<Void> insert(@Valid @RequestBody CategoriaDTO objDto) {
+	public ResponseEntity<Void> insert(@Valid @RequestBody MovimentacaoDTO objDto) {
 		
-		Categoria obj = serv.insert(objDto);
+		Movimentacao obj = serv.insert(objDto);
 
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().
 				path("/{id}").buildAndExpand(obj.getId()).toUri();
@@ -53,7 +52,7 @@ public class CategoriaResource {
 	}
 	
 	@RequestMapping(value = "/{id}", method=RequestMethod.PUT)
-	public ResponseEntity<Void> update(@Valid @RequestBody CategoriaDTO objDto, @PathVariable Integer id) {
+	public ResponseEntity<Void> update(@Valid @RequestBody MovimentacaoDTO objDto, @PathVariable Integer id) {
 		
 		serv.update(objDto);
 
