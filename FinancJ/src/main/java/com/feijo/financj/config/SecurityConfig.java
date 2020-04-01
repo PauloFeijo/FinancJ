@@ -1,6 +1,7 @@
 package com.feijo.financj.config;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -23,6 +24,8 @@ import com.feijo.financj.security.JWTAuthenticationFilter;
 import com.feijo.financj.security.JWTAuthorizationFilter;
 import com.feijo.financj.security.JWTUtil;
 
+import net.bytebuddy.build.Plugin.Engine.Source.Origin;
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -37,14 +40,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private JWTUtil jwtUtil;
 	
-	private static final String[] PUBLIC_MATCHERS = {
+	/*private static final String[] PUBLIC_MATCHERS = {
 		//"/h2-console/**"
 		"/**"
 	};
 	
 	private static final String[] PUBLIC_MATCHERS_POST = {
 		"/usuarios/**"
-	};	
+	};*/
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -55,14 +58,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		
 		http.cors();
 		http.authorizeRequests()
-			.antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
-		    .antMatchers(PUBLIC_MATCHERS).permitAll()
+			/*.antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
+		    .antMatchers(PUBLIC_MATCHERS).permitAll()*/
+			.antMatchers("/**").permitAll()
 		    .anyRequest()
 		    .authenticated();
 		http.csrf().disable();
-		http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil));
+		/*http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil));
 		http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService)); 
-		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);*/
 		
 		super.configure(http);
 	}
@@ -74,8 +78,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Bean
 	CorsConfigurationSource corsConfigurationSource() {
-		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource(); 
-		source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource(); 	
+		
+		CorsConfiguration cors = new CorsConfiguration().applyPermitDefaultValues();
+		
+		cors.addAllowedMethod(HttpMethod.PUT);
+		cors.addAllowedMethod(HttpMethod.DELETE);
+		
+		source.registerCorsConfiguration("/**", cors);
+		
 		return source;
 	}
 	

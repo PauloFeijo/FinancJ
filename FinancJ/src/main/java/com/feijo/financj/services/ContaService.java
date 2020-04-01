@@ -37,6 +37,7 @@ public class ContaService {
 	public Conta insert(Conta obj) {
 		Conta newObj = new Conta();
 		updateData(newObj, obj);
+		newObj.setSaldo(0.0);
 		return repo.save(newObj);		
 	}
 
@@ -54,7 +55,6 @@ public class ContaService {
 	protected void updateData(Conta newObj, Conta obj) {
 		newObj.setDescricao(obj.getDescricao());
 		newObj.setNumero(obj.getNumero());
-		newObj.setSaldo(obj.getSaldo());
 		newObj.setUsuario(userServ.getUsuarioLogado());
 	}
 	

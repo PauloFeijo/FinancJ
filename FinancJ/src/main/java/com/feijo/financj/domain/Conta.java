@@ -24,7 +24,6 @@ public class Conta implements Serializable {
 	
 	private String numero;
 	
-	@NotNull(message = "Campo obrigatório")
 	private Double saldo;
 	
 	@JsonIgnore
