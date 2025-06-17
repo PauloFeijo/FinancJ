@@ -4,18 +4,11 @@ import io.github.paulofeijo.financj.entities.Category;
 import io.github.paulofeijo.financj.repositories.CategoryRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class CategoryService extends BaseService<Category, CategoryRepository>{
 
     public CategoryService(CategoryRepository repository) {
         super(repository);
-    }
-
-    @Override
-    public List<Category> getAll() {
-        return repository.findByParentIsNull();
     }
 
     @Override
