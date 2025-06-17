@@ -3,6 +3,7 @@ package io.github.paulofeijo.financj.controllers;
 import io.github.paulofeijo.financj.controllers.mappers.BaseMapper;
 import io.github.paulofeijo.financj.entities.EntityBase;
 import io.github.paulofeijo.financj.services.BaseService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -39,7 +40,7 @@ public abstract class BaseController2<
     }
 
     @PostMapping
-    protected ResponseEntity<OutputDto> create(@RequestBody InputDto dto) {
+    protected ResponseEntity<OutputDto> create(@RequestBody @Valid InputDto dto) {
         Entity created = service.create(mapper.toEntity(dto));
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
@@ -49,7 +50,7 @@ public abstract class BaseController2<
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<OutputDto> update(@PathVariable Long id, @RequestBody InputDto dto) {
+    public ResponseEntity<OutputDto> update(@PathVariable Long id, @RequestBody @Valid InputDto dto) {
         Entity updated = service.update(id, mapper.toEntity(dto));
         return (updated == null)
                 ? ResponseEntity.notFound().build()
