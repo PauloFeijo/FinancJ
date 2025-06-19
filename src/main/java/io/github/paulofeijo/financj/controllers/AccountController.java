@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/accounts")
-public class AccountController extends BaseController2<Account, AccountService, InputAccountDto, OutputAccountDto, AccountMapper> {
+public class AccountController extends BaseController<Account, AccountService, InputAccountDto, OutputAccountDto, AccountMapper> {
 
     public AccountController(AccountService service, AccountMapper mapper) {
         super(service, mapper);

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/transfers")
-public class TransferController extends BaseController2<Transfer, TransferService, InputTransferDto, OutputTransferDto, TransferMapper> {
+public class TransferController extends BaseController<Transfer, TransferService, InputTransferDto, OutputTransferDto, TransferMapper> {
 
     public TransferController(TransferService service, TransferMapper mapper) {
         super(service, mapper);

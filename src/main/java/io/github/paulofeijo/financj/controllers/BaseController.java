@@ -1,7 +1,9 @@
 package io.github.paulofeijo.financj.controllers;
 
+import io.github.paulofeijo.financj.controllers.mappers.BaseMapper;
 import io.github.paulofeijo.financj.entities.EntityBase;
 import io.github.paulofeijo.financj.services.BaseService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -9,44 +11,50 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
-public abstract class BaseController<T extends EntityBase, S extends BaseService<T, ?>> {
+public abstract class BaseController<
+        Entity extends EntityBase,
+        Service extends BaseService<Entity, ?>,
+        InputDto,
+        OutputDto,
+        Mapper extends BaseMapper<Entity, InputDto, OutputDto>> {
 
-    protected final S service;
+    protected final Service service;
+    private final Mapper mapper;
 
-    protected BaseController(S service) {
+    protected BaseController(Service service, Mapper mapper) {
         this.service = service;
+        this.mapper = mapper;
     }
 
     @GetMapping
-    public ResponseEntity<List<T>> getAll() {
-        return ResponseEntity.ok(service.getAll());
+    public ResponseEntity<List<OutputDto>> getAll() {
+        return ResponseEntity.ok(service.getAll().stream().map(mapper::toDto).toList());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<T> findById(@PathVariable Long id) {
-        T entity = service.getById(id);
+    public ResponseEntity<OutputDto> findById(@PathVariable Long id) {
+        Entity entity = service.getById(id);
         return (entity == null)
                 ? ResponseEntity.notFound().build()
-                : ResponseEntity.ok(entity);
+                : ResponseEntity.ok(mapper.toDto(entity));
     }
 
     @PostMapping
-    public ResponseEntity<T> create(@RequestBody T entity) {
-        T created = service.create(entity);
+    protected ResponseEntity<OutputDto> create(@RequestBody @Valid InputDto dto) {
+        Entity created = service.create(mapper.toEntity(dto));
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(created.getId())
                 .toUri();
-        return ResponseEntity.created(uri).body(created);
+        return ResponseEntity.created(uri).body(mapper.toDto(created));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<T> update(@PathVariable Long id, @RequestBody T entity) {
-        entity.setId(id);
-        T updated = service.update(id, entity);
+    public ResponseEntity<OutputDto> update(@PathVariable Long id, @RequestBody @Valid InputDto dto) {
+        Entity updated = service.update(id, mapper.toEntity(dto));
         return (updated == null)
                 ? ResponseEntity.notFound().build()
-                : ResponseEntity.accepted().body(updated);
+                : ResponseEntity.accepted().body(mapper.toDto(updated));
     }
 
     @DeleteMapping("/{id}")

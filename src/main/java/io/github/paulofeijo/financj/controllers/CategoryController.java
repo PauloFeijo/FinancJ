@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/categories")
-public class CategoryController extends BaseController2<Category, CategoryService, InputCategoryDto, OutputCategoryDto, CategoryMapper> {
+public class CategoryController extends BaseController<Category, CategoryService, InputCategoryDto, OutputCategoryDto, CategoryMapper> {
 
     public CategoryController(CategoryService service, CategoryMapper mapper) {
         super(service, mapper);
